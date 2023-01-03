@@ -30,6 +30,10 @@
                     <a href="forums.php"
                         class="{if $pages.isForums}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.forums}</a>
                 </li>
+                <li>
+                    <a href="more.php"
+                        class="{if $pages.isMore}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.more}</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -68,6 +72,41 @@
                     </li>
                     <li>
                         <a href="account.php?tab=options" class="mx-1 hover:text-red-200">{$lang.options}</a>
+                    </li>
+                {elseif $pages.isBrowse}
+                    <li>
+                        <a href="browse.php" class="mx-1 hover:text-red-200">{$lang.list}</a>
+                    </li>
+                    <li>
+                        <a href="upload.php" class="mx-1 hover:text-red-200">{$lang.upload}</a>
+                    </li>
+                    {if $logged}
+                        <li>
+                            <a href="favourites.php?user={$user._id}" class="mx-1 hover:text-red-200">{$lang.my_favourites}</a>
+                        </li>
+                    {/if}
+                    <li>
+                        <a href="?tab=random" class="mx-1 hover:text-red-200">{$lang.random}</a>
+                    </li>
+
+                {elseif $pages.isMore}
+                    <li>
+                        <a href="more.php" class="mx-1 hover:text-red-200">{$lang.home}</a>
+                    </li>
+                    <li>
+                        <a href="mailto:{$config.email.general}" class="mx-1 hover:text-red-200" target="_blank">{$lang.contact_us}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=about" class="mx-1 hover:text-red-200">{$lang.about}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=help" class="mx-1 hover:text-red-200">{$lang.help}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=tos" class="mx-1 hover:text-red-200">{$lang.tos}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=privacy" class="mx-1 hover:text-red-200">{$lang.privacy_policy}</a>
                     </li>
                 {/if}
             </ul>

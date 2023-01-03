@@ -110,21 +110,21 @@
             <label for="blacklist">{$lang.tag_blacklist}</label>
             <p class="text-sm text-gray-700">{$lang.phrases.tag_blacklist}</p>
             <textarea name="blacklist" id="blacklist"
-                class="w-full md:w-[400px] min-h-[100px]">{$user.blacklist}</textarea><br>
+                class="w-full md:w-[400px] min-h-[100px] px-1">{$user.blacklist}</textarea><br>
 
             <label for="commentThreshold">{$lang.comment_threshold}</label>
             <p class="text-sm text-gray-700">{$lang.phrases.comment_threshold}</p>
-            <input type="number" id="commentThreshold" name="commentThreshold" class="p-0 mb-1 w-full md:w-[400px]"
+            <input type="number" id="commentThreshold" name="commentThreshold" class="p-0 mb-1 w-full md:w-[400px] px-1"
                 value="{$user.commentThreshold}"><br>
 
             <label for="postThreshold">{$lang.post_threshold}</label>
             <p class="text-sm text-gray-700">{$lang.phrases.post_threshold}</p>
-            <input type="number" id="postThreshold" name="postThreshold" class="p-0 mb-1 w-full md:w-[400px]"
+            <input type="number" id="postThreshold" name="postThreshold" class="p-0 mb-1 w-full md:w-[400px] px-1"
                 value="{$user.postThreshold}"><br>
 
             <label for="tags">{$lang.my_tags}</label>
             <p class="text-sm text-gray-700">{$lang.phrases.my_tags}</p>
-            <textarea name="tags" id="tags" class="w-full md:w-[400px] min-h-[100px]">{$user.myTags}</textarea><br>
+            <textarea name="tags" id="tags" class="w-full md:w-[400px] min-h-[100px] px-1">{$user.myTags}</textarea><br>
 
             <label>
                 <input type="checkbox" name="safeOnly" id="safeOnly" {if $user.safeOnly}checked{/if}>

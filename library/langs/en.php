@@ -37,6 +37,16 @@ $lang = array(
     "my_tags" => "My Tags",
     "safe_only" => "Safe Only",
     "save" => "Save",
+    "list" => "List",
+    "upload" => "Upload",
+    "random" => "Random",
+    "more" => "More",
+    "contact_us" => "Contact Us",
+    "about" => "About",
+    "help" => "Help",
+    "tos" => "ToS",
+    "terms_of_service" => "Terms of Service",
+    "privacy_policy" => "Privacy Policy",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

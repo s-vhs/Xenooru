@@ -44,5 +44,6 @@ $pages = array(
     "isBrowse" => false,
     "isComments" => false,
     "isTags" => false,
-    "isForums" => false
+    "isForums" => false,
+    "isMore" => false
 );

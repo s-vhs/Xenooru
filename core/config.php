@@ -4,6 +4,9 @@ $config["title"] = "Xenooru";
 $config["slogan"] = "Booru made simple";
 $config["logo"] = "assets/logo.png";
 
+$config["email"]["general"] = "hello@domain.com";
+$config["email"]["info"] = "info@domain.com";
+
 // Default-Variablen
 $config["default"]["theme"] = "eve";
 $config["default"]["lang"] = "en";
