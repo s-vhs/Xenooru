@@ -57,7 +57,7 @@
         </h1>
         <p class="text-sm">{$lang.phrases.options}</p>
     {elseif $tab == "login" AND !$logged}
-        <h1 class="text-xl font-bold">{$lang.login}</h1>
+        <h1 class="text-2xl font-bold">{$lang.login}</h1>
         <p class="text-sm">
             {$lang.phrases.login2}
             <a href="?tab=signup" class="text-red-500 hover:text-red-300">{$lang.phrases.login3}</a>
@@ -80,7 +80,7 @@
         <p class="mt-2 text-sm"><a href="account.php?tab=forgot"
                 class="text-red-500 hover:text-red-300">{$lang.forgot_password}</a></p>
     {elseif $tab == "signup" AND !$logged}
-        <h1 class="text-xl font-bold">{$lang.signup}</h1>
+        <h1 class="text-2xl font-bold">{$lang.signup}</h1>
         <form method="POST" name="signup" class="mt-2">
             <label for="username">{$lang.username}:</label><br>
             <input type="text" minlength="3" maxlength="50" id="username" name="username" class="p-0 mb-1"><br>
@@ -102,7 +102,7 @@
             {/if}
         </form>
     {elseif $tab == "options"}
-        <h1 class="text-xl font-bold">{$lang.options}</h1>
+        <h1 class="text-2xl font-bold">{$lang.options}</h1>
         <p class="text-sm">
             {$lang.phrases.options2}
         </p>

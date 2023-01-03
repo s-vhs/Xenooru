@@ -3,6 +3,7 @@
 $config["title"] = "Xenooru";
 $config["slogan"] = "Booru made simple";
 $config["logo"] = "assets/logo.png";
+$config["salt"] = "qwertz"; // Never loose this. If you loose this, you can throw away all old data!
 
 $config["email"]["general"] = "hello@domain.com";
 $config["email"]["info"] = "info@domain.com";

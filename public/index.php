@@ -1,6 +1,6 @@
 <?php
 
-require "autoload.php";
+require "../autoload.php";
 
 $smarty->assign("pagetitle", $config["slogan"]);
 $smarty->assign("totalposts", str_split($db["posts"]->count()));

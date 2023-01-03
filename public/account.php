@@ -1,6 +1,6 @@
 <?php
 
-require "autoload.php";
+require "../autoload.php";
 
 $pages["isAccount"] = true;
 switch ($_GET["tab"] ?? "home") {

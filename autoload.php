@@ -14,18 +14,18 @@ require_once "library/SleekDB/Store.php";
 // Hier initialisieren wir die Template-Engine und erstellen direkt ein Element
 require_once "library/smarty/libs/smarty.class.php";
 $smarty = new Smarty();
-// Hier setzen wir die einzelnen Variablen für Smarty
+// Hier setzen wir alle wichtige Verzeichnisse
 $smarty->setTemplateDir(platformSlashes($config["smarty"]["template"] . $usertheme));
 $smarty->setConfigDir(platformSlashes($config["smarty"]["config"]));
 $smarty->setCompileDir(platformSlashes($config["smarty"]["compile"]));
 $smarty->setCacheDir(platformSlashes($config["smarty"]["cache"]));
-
+// Hier setzen wir die einzelnen Variablen für Smarty
 $smarty->assign("config", $config);
 $smarty->assign("lang", $lang);
 $smarty->assign("theme", $theme);
 $smarty->assign("userlang", $userlang);
 $smarty->assign("usertheme", $usertheme);
-$smarty->assign("version", file_get_contents("version.txt"));
+$smarty->assign("version", file_get_contents(platformSlashes(__DIR__ . "/version.txt")));
 
 // Nun sind die Elemente für die Datenbank dran
 $db["posts"] = new \SleekDB\Store("posts", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Posts
@@ -36,9 +36,13 @@ $db["announcements"] = new \SleekDB\Store("announcements", platformSlashes($conf
 $db["forums"] = new \SleekDB\Store("forums", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Foren
 $db["forumPosts"] = new \SleekDB\Store("forumPosts", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Foren-Beiträge
 $db["sessions"] = new \SleekDB\Store("sessions", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Sitzungen
+$db["visitLogs"] = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
+$db["editLogs"] = new \SleekDB\Store("editLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Bearbeitungs-Logs
 
+// Sitzungs-überprüfung
 require_once "core/session.php";
 
+// Für das Menü
 $pages = array(
     "isAccount" => false,
     "isBrowse" => false,
