@@ -48,7 +48,7 @@ if (!$logged) {
                             "ip" => $_SERVER["REMOTE_ADDR"]
                         );
                         $db["sessions"]->insert($session);
-                        setcookie("session", $token, time() + 606024 * 30, "/");
+                        setcookie("session", $token, time() + 606024 * 9999, "/");
                         header("Location: account.php?tab=home");
                     }
                 } else {
@@ -101,12 +101,46 @@ if (!$logged) {
                     "ip" => $_SERVER["REMOTE_ADDR"]
                 );
                 $db["sessions"]->insert($session);
-                setcookie("session", $token, time() + 606024 * 30, "/");
+                setcookie("session", $token, time() + 606024 * 9999, "/");
                 header("Location: account.php?tab=home");
             } else {
                 $smarty->assign("error", "Username already taken!");
             }
         }
+    }
+}
+
+if (isset($_POST["updateOptions"])) {
+    $blacklist = $_POST["blacklist"];
+    $cThreshold = $_POST["commentThreshold"];
+    $pThreshold = $_POST["postThreshold"];
+    $tags = $_POST["tags"];
+    $safe = isset($_POST["safeOnly"]) ? true : false;
+
+    $error = false;
+    if (!is_numeric($cThreshold) || (empty($cThreshold) && $cThreshold != "0")) $error = true && $smarty->assign("error", "Comment Threshold is not a number!");
+    if (!is_numeric($pThreshold) || (empty($pThreshold) && $pThreshold != "0")) $error = true && $smarty->assign("error", "Post Threshold is not a number!");
+    if ($cThreshold < 0) $error = true && $smarty->assign("error", "Comment Threshold cannot be lower than 0!");
+    if ($pThreshold < 0) $error = true && $smarty->assign("error", "Post Threshold cannot be lower than 0!");
+
+    if (!$error) {
+        if ($logged) {
+            $data = array(
+                "blacklist" => $blacklist,
+                "commentThreshold" => $cThreshold,
+                "postThreshold" => $pThreshold,
+                "myTags" => $tags,
+                "safeOnly" => $safe
+            );
+            $db["users"]->updateById($user["_id"], $data);
+        } else {
+            setcookie("blacklist", $blacklist, time() + 606024 * 9999, "/");
+            setcookie("commentThreshold", $cThreshold, time() + 606024 * 9999, "/");
+            setcookie("postThreshold", $pThreshold, time() + 606024 * 9999, "/");
+            setcookie("myTags", $tags, time() + 606024 * 9999, "/");
+            setcookie("safeOnly", $safe, time() + 606024 * 9999, "/");
+        }
+        header("Refresh: 0");
     }
 }
 

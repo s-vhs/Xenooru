@@ -31,6 +31,12 @@ $lang = array(
     "email" => "Email",
     "optional" => "Optional",
     "error" => "Error",
+    "tag_blacklist" => "Tag Blacklist",
+    "comment_threshold" => "Comment Threshold",
+    "post_threshold" => "Post Threshold",
+    "my_tags" => "My Tags",
+    "safe_only" => "Safe Only",
+    "save" => "Save",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",
@@ -39,9 +45,15 @@ $lang = array(
         "signup" => "You can access 90% of {$config["title"]} without an account, but you can sign up for that extra bit of functionality. Just a login and password, no email required!",
         "everyones_favourites" => "View everyone's favorites.",
         "options" => "Manage account options.",
+        "options2" => "Separate individual tags, ratings and users with spaces. You must have cookies and JavaScript enabled in order for filtering to work.",
         "logout" => "Make like a tree and get out of here! Click here to logout of your account.",
         "my_profile" => "It's your profile. Do you need me to explain more?",
         "my_mail" => "Check your messages and reply to them.",
         "my_favourites" => "View all of your favorites and remove them if you wish.",
+        "tag_blacklist" => "Any post containing a blacklisted tag will be ignored.",
+        "comment_threshold" => "Any comment with a score below this will be ignored.",
+        "post_threshold" => "Any post with a score below this will be ignored.",
+        "my_tags" => "These will be accessible when you add or edit a post.",
+        "safe_only" => "You will only see images that are marked as safe on the main index listing.",
     )
 );
