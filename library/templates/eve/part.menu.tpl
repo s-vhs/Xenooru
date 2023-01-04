@@ -2,7 +2,7 @@
     <div class="flex flex-wrap justify-between items-center mx-auto px-4 py-2">
         <a href="index.php" class="flex items-center text-red-500 hover:text-red-300">
             <span
-                class="self-center text-xl font-bold whitespace-nowrap animate__animated animate__headShake">{$config.title}</span>
+                class="self-center text-xl font-bold whitespace-nowrap animate__animated animate__tada">{$config.title}</span>
         </a>
     </div>
 </nav>
@@ -94,7 +94,8 @@
                         <a href="more.php" class="mx-1 hover:text-red-200">{$lang.home}</a>
                     </li>
                     <li>
-                        <a href="mailto:{$config.email.general}" class="mx-1 hover:text-red-200" target="_blank">{$lang.contact_us}</a>
+                        <a href="mailto:{$config.email.general}" class="mx-1 hover:text-red-200"
+                            target="_blank">{$lang.contact_us}</a>
                     </li>
                     <li>
                         <a href="?tab=about" class="mx-1 hover:text-red-200">{$lang.about}</a>

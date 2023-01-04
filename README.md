@@ -1,0 +1,1 @@
+https://github.com/pawlox/video-thumbnail

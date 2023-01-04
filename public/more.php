@@ -21,7 +21,7 @@ switch ($_GET["tab"] ?? "home") {
 }
 $smarty->assign("tab", $tab);
 $smarty->assign("pages", $pages);
-$smarty->assign("pagetitle", $lang["browse"]);
+$smarty->assign("pagetitle", $lang["more"]);
 
 $smarty->display("part.top.tpl");
 $smarty->display("page.more.tpl");

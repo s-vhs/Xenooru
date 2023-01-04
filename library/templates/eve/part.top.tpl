@@ -11,6 +11,11 @@
     <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
     <link rel="stylesheet" href="assets/eve.css" type="text/css">
+    {if $config.captcha.enabled}
+        {if $config.captcha.type == "hcaptcha"}
+            <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
+        {/if}
+    {/if}
 </head>
 
 <body>

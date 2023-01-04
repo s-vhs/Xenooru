@@ -3,7 +3,9 @@
 $lang = array(
     [
         "short" => "en",
-        "name" => "English"
+        "name" => "English",
+        "author" => "Saintly2k",
+        "website" => "https://h33t.moe"
     ],
     "logo" => "Logo",
     "browse" => "Browse",
@@ -65,6 +67,23 @@ $lang = array(
     "keeping_your_data_secure" => "Keeping your data secure",
     "acceptance_of_this_policy" => "Acceptance of this policy",
     "changes_to_this_policy" => "Changes to this policy",
+    "total_unique_visits" => "Total unique visits",
+    "customize" => "Customize",
+    "close" => "Close",
+    "theme" => "Theme",
+    "language" => "Language",
+    "contact" => "Contact",
+    "proudly_powered_by" => "Proudly powered by",
+    "content_loaded_in" => "Content loaded in",
+    "seconds" => "Seconds",
+    "developed_by" => "Developed by",
+    "the_team" => "The Team",
+    "media_copyright_by_their_respective_owners" => "Media &copy; by their respective owners",
+    "only" => "Only",
+    "source" => "Source",
+    "title" => "Title",
+    "rating" => "Rating",
+    "max" => "Max.",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",
@@ -158,5 +177,10 @@ $lang = array(
             "acceptance_of_this_policy" => "Continued use of our site signifies your acceptance of this policy. If you do not accept the policy then please do not use this site. When registering we will further request your explicit acceptance of the privacy policy.",
             "changes_to_this_policy" => "We may make changes to this policy at any time. You may be asked to review and re-accept the information in this policy if it changes in the future.",
         ),
+        "upload" => array(
+            "tags" => "At least 5! Separate tags with spaces, ex: green_eyes purple_hair",
+            "tos" => "I have read the Terms of Service and agree with them.",
+            "privacy" => "I have read the Privacy Policy and agree with it.",
+        )
     ),
 );

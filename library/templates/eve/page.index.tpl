@@ -9,6 +9,7 @@
         <a href="forums.php" class="mx-2 text-red-500 hover:text-red-300">{$lang.forums}</a>
     </p>
     <form method="GET" name="search" action="browse.php">
+        <input type="text" name="page" value="search" hidden readonly>
         <div class="flex items-center">
             <input type="text" name="query" class="mx-auto mt-1 p-0 w-[350px] animate__animated animate__fadeInUp">
         </div>
@@ -18,14 +19,14 @@
                 value="{$lang.search}">
         </div>
     </form>
+    <p class="mt-1 text-center text-gray-500 text-sm animate__animated animate__fadeInUp">
+        <a href="https://github.com/s-vhs/Xenooru" target="_blank" class="underline">{$lang.running_xenooru}
+            {$version}</a> |
+        {$lang.total_unique_visits}: {$totalvisits}
+    </p>
     <div class="mt-1">
-        {foreach from=totalposts item=array key=id}
-            <img src="assets/counter/{$id}.gif" class="mx-auto animate__animated animate__zoomIn">
+        {foreach from=$totalposts item=item key=id}
+            <img src="assets/counter/{$item}.gif" class="mx-auto animate__animated animate__zoomIn">
         {/foreach}
     </div>
-    <p class="mt-1 text-center text-gray-500 text-sm animate__animated animate__fadeInDown">
-        <a href="https://github.com/s-vhs/Xenooru" target="_blank">
-            {$lang.running_xenooru} {$version}
-        </a>
-    </p>
 </div>

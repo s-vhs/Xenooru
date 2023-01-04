@@ -39,6 +39,7 @@ if (!$logged) {
             if (!empty($check)) {
                 if (password_verify($password, $check["password"])) {
                     if ($check["banned"]) {
+                        doLog("login", false, "banned", $check["_id"]);
                         $smarty->assign("error", "Banned! Reason: " . $check["bannedReason"]);
                     } else {
                         $token = genToken();
@@ -49,14 +50,19 @@ if (!$logged) {
                         );
                         $db["sessions"]->insert($session);
                         setcookie("session", $token, time() + 606024 * 9999, "/");
+                        doLog("login", true, null, $check["_id"]);
                         header("Location: account.php?tab=home");
                     }
                 } else {
+                    doLog("login", false, "wrong password", $check["_id"]);
                     $smarty->assign("error", "Wrong Password!");
                 }
             } else {
+                doLog("login", false, "user not found");
                 $smarty->assign("error", "User not found!");
             }
+        } else {
+            doLog("login", false, "some error");
         }
     }
 
@@ -83,6 +89,8 @@ if (!$logged) {
                     "password" => $password,
                     "email" => $email,
                     "level" => $config["default"]["level"],
+                    "theme" => $usertheme,
+                    "lang" => $userlang,
                     "blacklist" => null,
                     "commentThreshold" => 0,
                     "postThreshold" => 0,
@@ -102,10 +110,14 @@ if (!$logged) {
                 );
                 $db["sessions"]->insert($session);
                 setcookie("session", $token, time() + 606024 * 9999, "/");
+                doLog("signup", true, null, $check["_id"]);
                 header("Location: account.php?tab=home");
             } else {
+                doLog("signup", false, "username already taken: " . $username);
                 $smarty->assign("error", "Username already taken!");
             }
+        } else {
+            doLog("signup", false, "some error");
         }
     }
 }
@@ -133,14 +145,16 @@ if (isset($_POST["updateOptions"])) {
                 "safeOnly" => $safe
             );
             $db["users"]->updateById($user["_id"], $data);
-        } else {
-            setcookie("blacklist", $blacklist, time() + 606024 * 9999, "/");
-            setcookie("commentThreshold", $cThreshold, time() + 606024 * 9999, "/");
-            setcookie("postThreshold", $pThreshold, time() + 606024 * 9999, "/");
-            setcookie("myTags", $tags, time() + 606024 * 9999, "/");
-            setcookie("safeOnly", $safe, time() + 606024 * 9999, "/");
         }
+        setcookie("blacklist", $blacklist, time() + 606024 * 9999, "/");
+        setcookie("commentThreshold", $cThreshold, time() + 606024 * 9999, "/");
+        setcookie("postThreshold", $pThreshold, time() + 606024 * 9999, "/");
+        setcookie("myTags", $tags, time() + 606024 * 9999, "/");
+        setcookie("safeOnly", $safe, time() + 606024 * 9999, "/");
+        doLog("options", true, null, $logged ? $user["_id"] : null);
         header("Refresh: 0");
+    } else {
+        doLog("options", false, "some error", $logged ? $user["_id"] : null);
     }
 }
 
