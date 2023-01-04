@@ -1,3 +1,5 @@
+[![Banner](https://cdn.h33t.moe/images/repo_banners/xenooru.png)](https://github.com/s-vhs/xenooru)
+
 # Xenooru
 
 Super-fast, lightweight flat-file Booru software. Kept very minimalistic and simple but highly customizable and extendable.
