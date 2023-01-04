@@ -12,7 +12,7 @@ switch ($_GET["page"] ?? "browse") {
         $id = $_GET["id"];
         $post = $db["posts"]->findById($id);
         if (empty($post)) header("Location: browse.php") && die("post not found.");
-        $title = $post["tags"] . " | " . $post["_id"];
+        $title = "{$post["tags"]} score:{$post["score"]} rating:{$post["rating"]} | {$post["_id"]}";
         $page = "post";
         break;
     case "search":
@@ -40,7 +40,7 @@ switch ($_GET["page"] ?? "browse") {
             array_push($pagis, $i + 1);
         }
         $smarty->assign("pagis", $pagis);
-        $title = $lang["search"];
+        $title = "{$lang["search"]}: {$searchQuery} - {$lang["page"]} " . ($_GET["pagination"] ?? 1);
         break;
     default:
         $skip = (($_GET["pagination"] ?? 1) - 1) * $config["perpage"]["posts"];
@@ -60,7 +60,7 @@ switch ($_GET["page"] ?? "browse") {
         }
         $smarty->assign("pagis", $pagis);
         $page = "browse";
-        $title = $lang["browse"];
+        $title = "{$lang["browse"]} - {$lang["page"]} " . ($_GET["pagination"] ?? 1);
 }
 $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
