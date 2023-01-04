@@ -103,9 +103,9 @@ function processTags($tags)
                     "modified" => now(),
                     "timestamp" => now()
                 );
-                $tag = $db->insert($data);
+                $db->insert($data);
             }
-            $_tags .= $tag["name"] . " ";
+            $_tags .= $tag . " ";
         }
     }
     return trim($_tags);
