@@ -85,6 +85,12 @@ $lang = array(
     "rating" => "Rating",
     "max" => "Max.",
     "page" => "Page",
+    "general" => "General",
+    "copyrights" => "Copyrights",
+    "characters" => "Characters",
+    "artists" => "Artists",
+    "metas" => "Metas",
+    "wiki" => "Wiki",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

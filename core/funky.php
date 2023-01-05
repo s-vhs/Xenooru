@@ -88,27 +88,146 @@ function genUuid()
     );
 }
 
-function processTags($tags)
+function startsWith($string, $startString)
+{
+    $len = strlen($startString);
+    return (substr($string, 0, $len) === $startString);
+}
+
+function toStringWithSpaces(array $array)
+{
+    if (empty($array) || !is_array($array)) return false;
+    $_items = "";
+    foreach ($array as $item) {
+        $_items .= $item . " ";
+    }
+    return trim($_items);
+}
+
+function toArrayFromSpaces(string $string)
+{
+    if (empty($string)) return false;
+    $_items = array();
+    $array = explode(" ", trim($string));
+    foreach ($array as $item) {
+        array_push($_items, trim($item));
+    }
+    return $_items;
+}
+
+function processTags(string $tags)
 {
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
     $tags = explode(" ", $tags);
+    $tagsArray = array();
     $_tags = "";
+    $amount = 0;
     foreach ($tags as $tag) {
         if (!empty($tag)) {
-            if (empty($db->findBy(["name", "=", $tag]))) {
+            if (startsWith($tag, "artist:") || startsWith($tag, "tag:") || startsWith($tag, "character:") || startsWith($tag, "char:") || startsWith($tag, "copyright:") || startsWith($tag, "copy:") || startsWith($tag, "meta:")) {
+                if (startsWith($tag, "artist:")) {
+                    $type = "artist";
+                    $tag = substr($tag, 7);
+                    $chosen = true;
+                } elseif (startsWith($tag, "character:") || startsWith($tag, "char:")) {
+                    $type = "character";
+                    if (startsWith($tag, "char:"))
+                        $tag = substr($tag, 5);
+                    else
+                        $tag = substr($tag, 10);
+                    $chosen = true;
+                } elseif (startsWith($tag, "meta:")) {
+                    $type = "meta";
+                    $tag = substr($tag, 5);
+                    $chosen = true;
+                } elseif (startsWith($tag, "tag:")) {
+                    $type = "tag";
+                    $tag = substr($tag, 4);
+                    $chosen = true;
+                } else {
+                    $type = "copyright";
+                    if (startsWith($tag, "copy:"))
+                        $tag = substr($tag, 5);
+                    else
+                        $tag = substr($tag, 10);
+                    $chosen = true;
+                }
+            } else {
+                $type = "tag";
+                $chosen = false;
+            }
+            $_tag = $db->findBy(["name", "=", $tag]);
+            if (($chosen && empty($db->findBy([["name", "=", $tag], "AND", ["type", "=", $type]]))) || (!$chosen && empty($_tag))) {
+                switch ($type) {
+                    case "copyright":
+                        $order = 1;
+                        break;
+                    case "character":
+                        $order = 2;
+                        break;
+                    case "artist":
+                        $order = 3;
+                        break;
+                    case "tag":
+                        $order = 4;
+                        break;
+                    default:
+                        $order = 5;
+                }
                 $data = array(
                     "name" => $tag,
+                    "type" => $type,
+                    "order" => $order,
                     "modified" => now(),
                     "timestamp" => now()
                 );
                 $db->insert($data);
             }
+            array_push($tagsArray, $tag);
+            $amount++;
+        }
+    }
+    if (!empty($tagsArray)) {
+        sort($tagsArray);
+        foreach ($tagsArray as $tag) {
             $_tags .= $tag . " ";
         }
     }
-    return trim($_tags);
+    return array("tags" => trim($_tags), "amount" => $amount);
+}
+
+function checkTags(int $post, $tags)
+{
+    if (!is_array($tags)) $tags = toArrayFromSpaces($tags);
+    require "config.php";
+    require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+    $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
+    $db["tagRelations"] = new \SleekDB\Store("tagRelations", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags-Verknüpfungen
+    $post = $db["tags"]->findById($post);
+    if (empty($post)) return "Post does not exist";
+    $relations = $db["tagRelations"]->findBy(["post", "=", $post["_id"]]);
+    $_tags = toStringWithSpaces($tags);
+    processTags($_tags);
+    if (!empty($relations)) {
+        foreach ($relations as $rel) {
+            if (!in_array($rel["name"], $tags)) $db["tagRelations"]->deleteById($rel["_id"]);
+        }
+    }
+    foreach ($tags as $tag) {
+        $_tag = $db["tags"]->findOneBy(["name", "=", $tag]);
+        $data = array(
+            "tag" => $_tag["_id"],
+            "name" => $_tag["name"],
+            "type" => $_tag["type"],
+            "order" => $_tag["order"],
+            "post" => $post["_id"],
+            "timestamp" => now()
+        );
+        if (empty($db["tagRelations"]->findBy([["post", "=", $post["_id"]], "AND", ["name", "=", $tag]]))) $db["tagRelations"]->insert($data);
+    }
+    return $tags;
 }
 
 function isLandsape($file)

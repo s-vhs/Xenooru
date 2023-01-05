@@ -25,9 +25,10 @@
         <label for="title">{$lang.title}:</label>
         <input type="text" id="title" name="title" class="p-0 px-1 mb-1 w-full"><br>
 
-        <label for="tags">{$lang.tags}</label>
+        <label for="search">{$lang.tags}</label>
         <p class="text-sm text-gray-700">{$lang.phrases.upload.tags}</p>
-        <textarea required name="tags" id="tags" class="w-full min-h-[100px] px-1"></textarea><br>
+        <textarea required name="tags" id="search" class="w-full min-h-[100px] px-1"></textarea><br>
+        <div id="display" class="w-full px-1"></div>
 
         <div class="mb-2">
             <p>{$lang.rating}:</p>

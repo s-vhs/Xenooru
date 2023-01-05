@@ -1,6 +1,7 @@
 <div>
     <a href="browse.php">
-        <img src="{$config.logo}" alt="{$lang.logo}" class="w-full animate__animated animate__fadeInDown">
+        <img src="assets/{$theme.directory}/{$config.logo}" alt="{$lang.logo}"
+            class="w-full animate__animated animate__fadeInDown">
     </a>
     <p class="text-center animate__animated animate__fadeInUp">
         <a href="browse.php" class="mx-2 text-red-500 hover:text-red-300">{$lang.browse}</a>
@@ -10,9 +11,11 @@
     </p>
     <form method="GET" name="search" action="browse.php">
         <input type="text" name="page" value="search" hidden readonly>
-        <div class="flex items-center">
-            <input type="text" name="query" class="mx-auto mt-1 p-0 w-[350px] animate__animated animate__fadeInUp">
+        <div class="flex items-center px-2 md:px-0">
+            <input type="text" name="query" id="search"
+                class="mx-auto mt-1 p-0 w-full mx-2 px-1 md:w-[350px] animate__animated animate__fadeInUp">
         </div>
+        <div id="display" class="w-full px-2 md:w-[350px] mx-auto"></div>
         <div class="flex items-center">
             <input type="submit"
                 class="mx-auto border border-black bg-gray-300 mt-1 px-2 hover:bg-gray-400 cursor-pointer animate__animated animate__fadeInUp"

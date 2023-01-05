@@ -19,12 +19,15 @@ $db["posts"] = new \SleekDB\Store("posts", platformSlashes($config["db"]["path"]
 $db["users"] = new \SleekDB\Store("users", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Nutzer
 $db["comments"] = new \SleekDB\Store("comments", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Kommentare
 $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
+$db["tagRelations"] = new \SleekDB\Store("tagRelations", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Verknüpfungen
 $db["announcements"] = new \SleekDB\Store("announcements", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Ankündigungen
 $db["forums"] = new \SleekDB\Store("forums", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Foren
 $db["forumPosts"] = new \SleekDB\Store("forumPosts", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Foren-Beiträge
 $db["sessions"] = new \SleekDB\Store("sessions", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Sitzungen
 $db["logs"] = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
 $db["visitLogs"] = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
+$db["postVotes"] = new \SleekDB\Store("postVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
+$db["commentVotes"] = new \SleekDB\Store("commentVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
 
 // Sitzungs-überprüfung
 require "core/session.php";
@@ -55,6 +58,7 @@ $pages = array(
     "isComments" => false,
     "isTags" => false,
     "isForums" => false,
+    "isWiki" => false,
     "isMore" => false
 );
 

@@ -31,6 +31,10 @@
                         class="{if $pages.isForums}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.forums}</a>
                 </li>
                 <li>
+                    <a href="wiki.php"
+                        class="{if $pages.isWiki}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.wiki}</a>
+                </li>
+                <li>
                     <a href="more.php"
                         class="{if $pages.isMore}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.more}</a>
                 </li>
@@ -86,7 +90,7 @@
                         </li>
                     {/if}
                     <li>
-                        <a href="?tab=random" class="mx-1 hover:text-red-200">{$lang.random}</a>
+                        <a href="?page=random" class="mx-1 hover:text-red-200">{$lang.random}</a>
                     </li>
 
                 {elseif $pages.isMore}

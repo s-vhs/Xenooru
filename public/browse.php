@@ -7,6 +7,7 @@ switch ($_GET["page"] ?? "browse") {
     case "random":
         $page = "random";
         $title = $lang["random"];
+        header("Location: ?page=post&id=" . rand(1, $db["posts"]->count()));
         break;
     case "post":
         $id = $_GET["id"];
@@ -17,17 +18,73 @@ switch ($_GET["page"] ?? "browse") {
         break;
     case "search":
         $page = "search";
-        $searchQuery = strtolower(trim($_GET["query"]));
         $skip = (($_GET["pagination"] ?? 1) - 1) * $config["perpage"]["posts"];
-        $posts = $db["posts"]->createQueryBuilder()
-            ->search(["tags"], $searchQuery)
+        $search = $db["posts"]->createQueryBuilder();
+        $searchQuery = strtolower(trim($_GET["query"]));
+        if (($pos = strpos($searchQuery, "rating:")) !== false) {
+            $rtng = trim(substr($searchQuery, $pos + 7));
+            switch ($rtng) {
+                case "e":
+                case "nsfw":
+                case "expl":
+                case "explicit":
+                    $rating = "explicit";
+                    break;
+                case "q":
+                case "ques":
+                case "ecchi":
+                case "questionable":
+                    $rating = "questionable";
+                    break;
+                case "qe":
+                case "eq":
+                case "quex":
+                case "quesexpl":
+                case "quesnsfw":
+                case "questionablensfw":
+                case "questionableexplicit":
+                    $rating[0] = "questionable";
+                    $rating[1] = "explicit";
+                    break;
+                case "sq":
+                case "qs":
+                case "saqu":
+                case "qusa":
+                case "safque":
+                case "quesaf":
+                case "safequestionable":
+                case "questionablesafe":
+                    $rating[0] = "safe";
+                    $rating[1] = "questionable";
+                    break;
+                default:
+                    $rating = "safe";
+            }
+            $toSearch = str_replace("rating:" . $rtng, "", $searchQuery);
+        } else {
+            $toSearch = $searchQuery;
+        }
+        $posts = $search->search(["tags"], $toSearch)
             ->orderBy(["_id" => "DESC"]) // sort result
             ->limit($config["perpage"]["posts"])
             ->skip($skip)
             ->getQuery()
             ->fetch();
-        $allPosts = $db["posts"]->createQueryBuilder()
-            ->search(["tags"], $searchQuery)
+        if (isset($rating)) {
+            if (is_array($rating)) {
+                $_search = array();
+                $c = 0;
+                foreach ($rating as $r) {
+                    $_search[$c] = array("rating", "=", $r);
+                    $c++;
+                }
+                $search->where([$_search[0], "OR", $_search[1]]);
+            } else {
+                $search->where(["rating", "=", $rating]);
+            }
+        }
+        $allPosts = $search
+            ->search(["tags"], $toSearch)
             ->getQuery()
             ->fetch();
         $totalPages = count($allPosts) / $config["perpage"]["posts"];
@@ -65,6 +122,45 @@ switch ($_GET["page"] ?? "browse") {
 $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
 $smarty->assign("pagetitle", $title);
+
+if ($page == "browse" || $page == "search") {
+    /* Tag creation begin */
+    $tags["copyrights"] = array();
+    $tags["characters"] = array();
+    $tags["artists"] = array();
+    $tags["tags"] = array();
+    $tags["metas"] = array();
+    $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 1])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 2])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 3])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    $_tags["tags"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 4])->limit(30)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 5])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    foreach ($_tags["copyrights"] as $tag) {
+        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        \array_splice($_tags["copyrights"], 0, 1);
+        array_push($tags["copyrights"], $tag);
+    }
+    foreach ($_tags["characters"] as $tag) {
+        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        \array_splice($_tags["characters"], 0, 1);
+        array_push($tags["characters"], $tag);
+    }
+    foreach ($_tags["artists"] as $tag) {
+        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+    }
+    foreach ($_tags["tags"] as $tag) {
+        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        \array_splice($_tags["tags"], 0, 1);
+        array_push($tags["tags"], $tag);
+    }
+    foreach ($_tags["metas"] as $tag) {
+        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        \array_splice($_tags["metas"], 0, 1);
+        array_push($tags["metas"], $tag);
+    }
+    $smarty->assign("tags", $tags);
+    /* Tag creation end */
+}
 
 $smarty->display("part.top.tpl");
 $smarty->display("page.browse.tpl");
