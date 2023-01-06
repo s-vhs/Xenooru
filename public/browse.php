@@ -173,6 +173,61 @@ if ($page == "browse" || $page == "search" || $page == "post") {
     /* Tag creation end */
 }
 
+if ($page == "post") {
+    if ($logged) {
+        if (isset($_POST["edit"])) {
+            $error = false;
+            if ($config["captcha"]["enabled"]) {
+                if ($config["captcha"]["type"] == "hcaptcha") {
+                    if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+                }
+            }
+
+            if (!$error) {
+                if (isset($_POST["rating"])) {
+                    switch ($_POST["rating"]) {
+                        case "questionable":
+                            $rating = "questionable";
+                            break;
+                        case "explicit":
+                            $rating = "explicit";
+                            break;
+                        default:
+                            $rating = "safe";
+                    }
+
+
+                    $source = $_POST["source"];
+                    $title = $_POST["title"];
+                    $tags = processTags($_POST["tags"]);
+
+                    if ($tags["amount"] < $config["upload"]["min"]) {
+                        $error = true;
+                        doLog("upload", false, "only {$tags["amount"]} of {$config["upload"]["min"]}. post: " . $post["_id"], $user["_id"]);
+                        $smarty->assign("error", "You need to have at least {$config["upload"]["min"]} tags!");
+                    } else {
+                        $tags = $tags["tags"];
+                        $data = array(
+                            "source" => $source,
+                            "title" => $title,
+                            "tags" => $tags,
+                            "rating" => $rating
+                        );
+                        checkTags($post["_id"], toArrayFromSpaces($tags));
+                        logTags($post["_id"], $post["tags"], $tags, $user["_id"]);
+                        $db["posts"]->updateById($post["_id"], $data);
+                        doLog("edit", true, $post["_id"], $user["_id"]);
+                        header("Location: browse.php?page=post&id=" . $post["_id"]);
+                    }
+                } else {
+                    doLog("edit", false, "no rating given. post: " . $post["_id"], $user["_id"]);
+                    $smarty->assign("error", "No rating given!");
+                }
+            }
+        }
+    }
+}
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.browse.tpl");
 $smarty->display("part.bottom.tpl");

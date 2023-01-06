@@ -4,6 +4,8 @@ require "../autoload.php";
 
 if (isset($_POST["search"])) {
     $_tag = array_reverse(explode(" ", $_POST["search"]));
+    $search = $_POST["item"];
+    $display = $_POST["display"];
     $_tag = $_tag[0];
     if ($usertheme == "eve") {
         echo "<ul class=\"text-sm\">";
@@ -25,7 +27,7 @@ if (isset($_POST["search"])) {
                         $color = "red";
                     else
                         $color = "orange";
-                    echo "<li onclick=\"fill('" . substr($tag["name"], strlen($_tag)) . " ')\" class=\"text-" . $color . "-500 cursor-pointer\">" . str_replace("_", " ", $tag["name"]) . " (" . count($db["tagRelations"]->findBy(["name", "=", $tag["name"]])) . ")</li>";
+                    echo "<li onclick=\"fill('" . substr($tag["name"], strlen($_tag)) . " ', '{$search}', '{$display}')\" class=\"text-{$color}-500 cursor-pointer\">" . str_replace("_", " ", $tag["name"]) . " (" . count($db["tagRelations"]->findBy(["name", "=", $tag["name"]])) . ")</li>";
                 }
             } else {
                 echo "<li>Nothing found...</li>";
@@ -44,7 +46,7 @@ if (isset($_POST["voteUp"])) {
     if (empty($post)) die(json_encode(["Post not found!", null])) && doLog("upvote", false, "post not found.", $user["_id"]);
     if (empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "up"]]))) {
         $deleted = false;
-        if (!empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "down"]]))) $db["postVotes"]->deleteBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]]]) && $deleted = true;
+        if (!empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "down"]]))) $db["postVotes"]->deleteBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "down"]]) && $deleted = true;
         $score = $post["score"] + ($deleted ? 2 : 1);
         $db["posts"]->updateById($post["_id"], ["score" => $score]);
         $data = array(
@@ -71,7 +73,7 @@ if (isset($_POST["voteDown"])) {
     if (empty($post)) die(json_encode(["Post not found!", null])) && doLog("downvote", false, "post not found.", $user["_id"]);
     if (empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "down"]]))) {
         $deleted = false;
-        if (!empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "up"]]))) $db["postVotes"]->deleteBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]]]) && $deleted = true;
+        if (!empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "up"]]))) $db["postVotes"]->deleteBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "up"]]) && $deleted = true;
         $score = $post["score"] - ($deleted ? 2 : 1);
         $db["posts"]->updateById($post["_id"], ["score" => $score]);
         $data = array(

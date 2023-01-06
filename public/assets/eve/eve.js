@@ -1,25 +1,24 @@
-function fill(Value) {
-    $('#search').val($('#search').val() + Value);
-    $('#display').hide();
-    $("#search").focus();
+function fill(Value, search = "search", display = "display") {
+    $("#" + search).val($("#" + search).val() + Value);
+    $("#" + display).hide();
+    $("#" + search).focus();
 }
 
-// Search
-$(document).ready(function () {
-    $("#search").keyup(function () {
-        let name = $('#search').val();
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {
-                search: name
-            },
-            success: function (html) {
-                $("#display").html(html).show();
-            }
-        });
+function doSearch(search = "search", display = "display") {
+    let name = $("#" + search).val();
+    $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {
+            search: name,
+            item: search,
+            display: display
+        },
+        success: function (html) {
+            $("#" + display).html(html).show();
+        }
     });
-});
+}
 
 function votePostUp(id) {
     $.ajax({
@@ -49,4 +48,15 @@ function votePostDown(id) {
             $("#scoreCount").html(text[1]);
         }
     });
+}
+
+function toggleDiv(id) {
+    let div = document.getElementById(id);
+    if (div.classList.contains("hidden")) {
+        div.classList.remove("hidden");
+        div.classList.add("block");
+    } else {
+        div.classList.remove("block");
+        div.classList.add("hidden");
+    }
 }

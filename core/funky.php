@@ -36,6 +36,26 @@ function doLog($action, $success, $value = null, $user = null)
     return true;
 }
 
+function logTags($post, $before, $after, $user)
+{
+    require "config.php";
+    require_once "../library/SleekDB/Store.php";
+    if (empty($post) || !is_numeric($post)) return false;
+    if (empty($after)) return false;
+    if (!empty($user) && !is_numeric($user)) return false;
+    $db = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
+    $data = array(
+        "post" => $post,
+        "before" => $before,
+        "after" => $after,
+        "user" => $user,
+        "ip" => $_SERVER["REMOTE_ADDR"],
+        "timestamp" => now()
+    );
+    $db->insert($data);
+    return true;
+}
+
 function visit()
 {
     require "config.php";
@@ -115,12 +135,12 @@ function toArrayFromSpaces(string $string)
     return $_items;
 }
 
-function processTags(string $tags)
+function processTags($tags)
 {
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    $tags = explode(" ", $tags);
+    if (!is_array($tags)) $tags = explode(" ", $tags);
     $tagsArray = array();
     $_tags = "";
     $amount = 0;

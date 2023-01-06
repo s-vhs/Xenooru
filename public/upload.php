@@ -124,10 +124,11 @@ if (isset($_POST["upload"])) {
                                     $post = $db["posts"]->insert($data);
                                     if ($post) {
                                         checkTags($post["_id"], toArrayFromSpaces($tags));
+                                        logTags($post["_id"], null, $tags, $user["_id"]);
                                         doLog("upload", true, $post["_id"], $user["_id"]);
                                         header("Location: browse.php?page=psot&id={$post["_id"]}");
                                     } else {
-                                        doLog("upload", false, "inserting data failed", $user["_id"]);
+                                        doLog("upload", false, "inserting data failed.", $user["_id"]);
                                         $smarty->assign("error", "The server messed up!");
                                     }
                                 }
