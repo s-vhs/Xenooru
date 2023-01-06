@@ -98,7 +98,7 @@ if (isset($_POST["upload"])) {
                                     $data = array(
                                         "source" => $source,
                                         "title" => $title,
-                                        "tags" => $tags,
+                                        "tags" => strtolower($tags),
                                         "rating" => $rating,
                                         "score" => 0,
                                         "file" => array(
@@ -124,9 +124,9 @@ if (isset($_POST["upload"])) {
                                     $post = $db["posts"]->insert($data);
                                     if ($post) {
                                         checkTags($post["_id"], toArrayFromSpaces($tags));
-                                        logTags($post["_id"], null, $tags, $user["_id"]);
+                                        logTags($post["_id"], $rating, "", $tags, $source, $title, $user["_id"], $user["username"]);
                                         doLog("upload", true, $post["_id"], $user["_id"]);
-                                        header("Location: browse.php?page=psot&id={$post["_id"]}");
+                                        header("Location: browse.php?page=post&id={$post["_id"]}");
                                     } else {
                                         doLog("upload", false, "inserting data failed.", $user["_id"]);
                                         $smarty->assign("error", "The server messed up!");

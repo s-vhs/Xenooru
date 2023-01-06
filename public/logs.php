@@ -9,7 +9,8 @@ switch ($_GET["page"] ?? "home") {
         $id = clean($_GET["id"]);
         $post = $db["posts"]->findById($id);
         if (empty($post)) header("Location: browse.php");
-        $history = $db["tagLogs"]->findBy(["post", "=", $post["_id"]], ["_id" => "DESC"]);
+        // $history = $db["tagLogs"]->findBy(["post", ""])
+        $history = $db["tagLogs"]->findBy(["post", "=", "{$post["_id"]}"], ["timestamp" => "desc"]);
         $smarty->assign("post", $post);
         $smarty->assign("history", $history);
         break;

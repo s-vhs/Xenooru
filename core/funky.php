@@ -9,6 +9,11 @@ function clean($data)
     return $data;
 }
 
+function stripNumbers($input)
+{
+    return preg_replace('/[^0-9]/', '', json_encode($input));
+}
+
 function platformSlashes($path)
 {
     return str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -28,15 +33,15 @@ function doLog($action, bool $success, $value = null, $user = null)
 {
     require "config.php";
     if ($config["logs"]) {
-        require_once "../library/SleekDB/Store.php";
+        require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+        $db = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Logs
         if (empty($action)) return false;
         if (!empty($user) && !is_numeric($user)) return false;
-        $db = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
         $data = array(
             "action" => clean($action),
             "success" => $success,
             "value" => clean($value),
-            "user" => clean($user),
+            "user" => $user,
             "ip" => clean($_SERVER["REMOTE_ADDR"]),
             "timestamp" => now()
         );
@@ -45,19 +50,24 @@ function doLog($action, bool $success, $value = null, $user = null)
     return true;
 }
 
-function logTags($post, $before, $after, $user)
+function logTags(int $post, string $rating, string $before, string $after, string $source, string $title, int $user, string $username)
 {
     require "config.php";
-    require_once "../library/SleekDB/Store.php";
+    require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+    $db = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Logs
     if (empty($post) || !is_numeric($post)) return false;
     if (empty($after)) return false;
+    if (empty($rating)) return false;
     if (!empty($user) && !is_numeric($user)) return false;
-    $db = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
     $data = array(
-        "post" => clean($post),
-        "before" => clean($before),
-        "after" => clean($after),
-        "user" => clean($user),
+        "post" => stripNumbers($post),
+        "rating" => clean(strtolower($rating)),
+        "before" => clean(strtolower($before)),
+        "after" => clean(strtolower($after)),
+        "source" => clean($source),
+        "title" => clean($title),
+        "user" => $user,
+        "username" => clean($username),
         "ip" => clean($_SERVER["REMOTE_ADDR"]),
         "timestamp" => now()
     );
@@ -128,7 +138,7 @@ function toStringWithSpaces(array $array)
     if (empty($array) || !is_array($array)) return false;
     $_items = "";
     foreach ($array as $item) {
-        $_items .= $item . " ";
+        $_items .= substr(clean($item), 0, 75) . " ";
     }
     return trim($_items);
 }
@@ -137,7 +147,7 @@ function toArrayFromSpaces(string $string)
 {
     if (empty($string)) return false;
     $_items = array();
-    $array = explode(" ", trim($string));
+    $array = explode(" ", trim(substr(clean($string), 0, 75)));
     foreach ($array as $item) {
         array_push($_items, trim($item));
     }
@@ -152,10 +162,9 @@ function processTags($tags)
     if (!is_array($tags)) $tags = explode(" ", clean($tags));
     $tagsArray = array();
     $_tags = "";
-    $amount = 0;
     foreach ($tags as $tag) {
         if (!empty($tag)) {
-            $tag = clean($tag);
+            $tag = strtolower(substr(clean($tag), 0, 75));
             if (startsWith($tag, "artist:") || startsWith($tag, "tag:") || startsWith($tag, "character:") || startsWith($tag, "char:") || startsWith($tag, "copyright:") || startsWith($tag, "copy:") || startsWith($tag, "meta:")) {
                 if (startsWith($tag, "artist:")) {
                     $type = "artist";
@@ -216,16 +225,16 @@ function processTags($tags)
                 $db->insert($data);
             }
             array_push($tagsArray, $tag);
-            $amount++;
         }
     }
     if (!empty($tagsArray)) {
+        $tagsArray = array_unique($tagsArray);
         sort($tagsArray);
         foreach ($tagsArray as $tag) {
             $_tags .= $tag . " ";
         }
     }
-    return array("tags" => trim($_tags), "amount" => $amount);
+    return array("tags" => trim($_tags), "amount" => count($tagsArray));
 }
 
 function checkTags(int $post, $tags)
@@ -246,7 +255,7 @@ function checkTags(int $post, $tags)
         }
     }
     foreach ($tags as $tag) {
-        $tag = clean($tag);
+        $tag = strtolower(substr(clean($tag), 0, 75));
         $_tag = $db["tags"]->findOneBy(["name", "=", $tag]);
         $data = array(
             "tag" => $_tag["_id"],

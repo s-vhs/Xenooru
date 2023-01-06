@@ -4,8 +4,8 @@ require "../autoload.php";
 
 if (isset($_POST["search"])) {
     $_tag = array_reverse(explode(" ", clean($_POST["search"])));
-    $search = clean($_POST["item"]);
-    $display = clean($_POST["display"]);
+    $search = clean($_POST["item"] ?? "");
+    $display = clean($_POST["display"] ?? "");
     $_tag = $_tag[0];
     if ($usertheme == "eve") {
         echo "<ul class=\"text-sm\">";

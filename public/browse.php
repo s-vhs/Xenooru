@@ -196,7 +196,6 @@ if ($page == "post") {
                             $rating = "safe";
                     }
 
-
                     $source = clean($_POST["source"]);
                     $title = clean($_POST["title"]);
                     $tags = processTags(clean($_POST["tags"]));
@@ -210,11 +209,11 @@ if ($page == "post") {
                         $data = array(
                             "source" => $source,
                             "title" => $title,
-                            "tags" => $tags,
+                            "tags" => strtolower($tags),
                             "rating" => $rating
                         );
                         checkTags($post["_id"], toArrayFromSpaces($tags));
-                        logTags($post["_id"], $post["tags"], $tags, $user["_id"]);
+                        logTags($post["_id"], $rating, $post["tags"], $tags, $title, $source, $user["_id"], $user["username"]);
                         $db["posts"]->updateById($post["_id"], $data);
                         doLog("edit", true, $post["_id"], $user["_id"]);
                         header("Location: browse.php?page=post&id=" . $post["_id"]);
