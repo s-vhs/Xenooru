@@ -10,7 +10,7 @@ switch ($_GET["page"] ?? "browse") {
         header("Location: ?page=post&id=" . rand(1, $db["posts"]->count()));
         break;
     case "post":
-        $id = $_GET["id"];
+        $id = clean($_GET["id"]);
         $post = $db["posts"]->findById($id);
         if (empty($post)) header("Location: browse.php") && die("post not found.");
         $poster = $db["users"]->findById($post["user"]);
@@ -21,9 +21,9 @@ switch ($_GET["page"] ?? "browse") {
         break;
     case "search":
         $page = "search";
-        $skip = (($_GET["pagination"] ?? 1) - 1) * $config["perpage"]["posts"];
+        $skip = ((clean($_GET["pagination"]) ?? 1) - 1) * $config["perpage"]["posts"];
         $search = $db["posts"]->createQueryBuilder();
-        $searchQuery = strtolower(trim($_GET["query"]));
+        $searchQuery = strtolower(trim(clean($_GET["query"])));
         if (($pos = strpos($searchQuery, "rating:")) !== false) {
             $rtng = trim(substr($searchQuery, $pos + 7));
             switch ($rtng) {
@@ -92,7 +92,7 @@ switch ($_GET["page"] ?? "browse") {
             ->fetch();
         $totalPages = count($allPosts) / $config["perpage"]["posts"];
         $smarty->assign("totalpages", $totalPages);
-        $smarty->assign("pagination", $_GET["pagination"] ?? 1);
+        $smarty->assign("pagination", clean($_GET["pagination"]) ?? 1);
         $smarty->assign("posts", $posts);
         $smarty->assign("searchquery", $searchQuery);
         $pagis = array();
@@ -100,10 +100,10 @@ switch ($_GET["page"] ?? "browse") {
             array_push($pagis, $i + 1);
         }
         $smarty->assign("pagis", $pagis);
-        $title = "{$lang["search"]}: {$searchQuery} - {$lang["page"]} " . ($_GET["pagination"] ?? 1);
+        $title = "{$lang["search"]}: {$searchQuery} - {$lang["page"]} " . (clean($_GET["pagination"] ?? 1));
         break;
     default:
-        $skip = (($_GET["pagination"] ?? 1) - 1) * $config["perpage"]["posts"];
+        $skip = ((clean($_GET["pagination"]) ?? 1) - 1) * $config["perpage"]["posts"];
         $posts = $db["posts"]->createQueryBuilder()
             ->orderBy(["_id" => "DESC"])
             ->limit($config["perpage"]["posts"])
@@ -112,7 +112,7 @@ switch ($_GET["page"] ?? "browse") {
             ->fetch();
         $totalPages = $db["posts"]->count() / $config["perpage"]["posts"];
         $smarty->assign("totalpages", $totalPages);
-        $smarty->assign("pagination", $_GET["pagination"] ?? 1);
+        $smarty->assign("pagination", clean($_GET["pagination"]) ?? 1);
         $smarty->assign("posts", $posts);
         $pagis = array();
         for ($i = 0; $i < $totalPages; $i++) {
@@ -120,7 +120,7 @@ switch ($_GET["page"] ?? "browse") {
         }
         $smarty->assign("pagis", $pagis);
         $page = "browse";
-        $title = "{$lang["browse"]} - {$lang["page"]} " . ($_GET["pagination"] ?? 1);
+        $title = "{$lang["browse"]} - {$lang["page"]} " . (clean($_GET["pagination"]) ?? 1);
 }
 $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
@@ -197,9 +197,9 @@ if ($page == "post") {
                     }
 
 
-                    $source = $_POST["source"];
-                    $title = $_POST["title"];
-                    $tags = processTags($_POST["tags"]);
+                    $source = clean($_POST["source"]);
+                    $title = clean($_POST["title"]);
+                    $tags = processTags(clean($_POST["tags"]));
 
                     if ($tags["amount"] < $config["upload"]["min"]) {
                         $error = true;

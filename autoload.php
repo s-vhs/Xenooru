@@ -28,7 +28,8 @@ $db["sessions"] = new \SleekDB\Store("sessions", platformSlashes($config["db"]["
 $db["logs"] = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
 $db["visitLogs"] = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
 $db["postVotes"] = new \SleekDB\Store("postVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
-$db["commentVotes"] = new \SleekDB\Store("commentVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
+$db["commentVotes"] = new \SleekDB\Store("commentVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Kommentar-Votes
+$db["tagLogs"] = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
 
 // Sitzungs-überprüfung
 require "core/session.php";

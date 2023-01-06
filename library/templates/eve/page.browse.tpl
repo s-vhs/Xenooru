@@ -230,8 +230,8 @@
 
             <p class="font-bold mt-2">{$lang.history}</p>
             <ul class="text-sm">
-                <li><a href="logs.php?page=tags_history&id={$post._id}"
-                        class="text-red-500 hover:text-red-300">{$lang.tags}</a></li>
+                <li><a href="logs.php?page=post&id={$post._id}" class="text-red-500 hover:text-red-300">{$lang.tags}</a>
+                </li>
             </ul>
 
             <p class="font-bold mt-2">{$lang.related_posts}</p>

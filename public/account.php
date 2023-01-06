@@ -25,8 +25,8 @@ $smarty->assign("pagetitle", $lang["my_account"]);
 
 if (!$logged) {
     if (isset($_POST["login"])) {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
+        $username = clean($_POST["username"]);
+        $password = clean($_POST["password"]);
 
         $error = false;
         if ($config["captcha"]["enabled"]) {
@@ -72,10 +72,10 @@ if (!$logged) {
     }
 
     if (isset($_POST["signup"])) {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-        $password2 = $_POST["password2"];
-        $email = $_POST["email"];
+        $username = clean($_POST["username"]);
+        $password = clean($_POST["password"]);
+        $password2 = clean($_POST["password2"]);
+        $email = clean($_POST["email"]);
 
         $error = false;
         if ($config["captcha"]["enabled"]) {
@@ -133,10 +133,10 @@ if (!$logged) {
 }
 
 if (isset($_POST["updateOptions"])) {
-    $blacklist = $_POST["blacklist"];
-    $cThreshold = $_POST["commentThreshold"];
-    $pThreshold = $_POST["postThreshold"];
-    $tags = $_POST["tags"];
+    $blacklist = clean($_POST["blacklist"]);
+    $cThreshold = clean($_POST["commentThreshold"]);
+    $pThreshold = clean($_POST["postThreshold"]);
+    $tags = clean($_POST["tags"]);
     $safe = isset($_POST["safeOnly"]) ? true : false;
 
     $error = false;

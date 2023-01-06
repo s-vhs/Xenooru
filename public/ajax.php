@@ -3,9 +3,9 @@
 require "../autoload.php";
 
 if (isset($_POST["search"])) {
-    $_tag = array_reverse(explode(" ", $_POST["search"]));
-    $search = $_POST["item"];
-    $display = $_POST["display"];
+    $_tag = array_reverse(explode(" ", clean($_POST["search"])));
+    $search = clean($_POST["item"]);
+    $display = clean($_POST["display"]);
     $_tag = $_tag[0];
     if ($usertheme == "eve") {
         echo "<ul class=\"text-sm\">";
@@ -41,7 +41,8 @@ if (isset($_POST["search"])) {
 
 if (isset($_POST["voteUp"])) {
     if (!$logged) die(json_encode(["Not logged in!", null])) && doLog("upvote", false, "not logged in.", null);
-    $id = $_POST["voteUp"];
+    $id = clean($_POST["voteUp"]);
+    if (!is_numeric($id)) die(json_encode(["Invalid ID!", null]));
     $post = $db["posts"]->findById($id);
     if (empty($post)) die(json_encode(["Post not found!", null])) && doLog("upvote", false, "post not found.", $user["_id"]);
     if (empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "up"]]))) {
@@ -68,7 +69,7 @@ if (isset($_POST["voteUp"])) {
 
 if (isset($_POST["voteDown"])) {
     if (!$logged) die(json_encode(["Not logged in!", null])) && doLog("downvote", false, "not logged in.", null);
-    $id = $_POST["voteDown"];
+    $id = clean($_POST["voteDown"]);
     $post = $db["posts"]->findById($id);
     if (empty($post)) die(json_encode(["Post not found!", null])) && doLog("downvote", false, "post not found.", $user["_id"]);
     if (empty($db["postVotes"]->findBy([["post", "=", $post["_id"]], "AND", ["user", "=", $user["_id"]], "AND", ["vote", "=", "down"]]))) {

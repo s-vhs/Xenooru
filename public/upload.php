@@ -30,9 +30,9 @@ if (isset($_POST["upload"])) {
                 default:
                     $rating = "safe";
             }
-            $source = $_POST["source"];
-            $title = $_POST["title"];
-            $tags = processTags($_POST["tags"]);
+            $source = clean($_POST["source"]);
+            $title = clean($_POST["title"]);
+            $tags = processTags(clean($_POST["tags"]));
             // Hat mindestens x tags?
             if ($tags["amount"] < $config["upload"]["min"]) {
                 $error = true;

@@ -1,5 +1,14 @@
 <?php
 
+function clean($data)
+{
+    $data = htmlspecialchars($data);
+    $data = strip_tags($data);
+    $data = stripslashes($data);
+    $data = trim($data);
+    return $data;
+}
+
 function platformSlashes($path)
 {
     return str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -15,7 +24,7 @@ function now()
     return date("d-m-Y h:i:s");
 }
 
-function doLog($action, $success, $value = null, $user = null)
+function doLog($action, bool $success, $value = null, $user = null)
 {
     require "config.php";
     if ($config["logs"]) {
@@ -24,11 +33,11 @@ function doLog($action, $success, $value = null, $user = null)
         if (!empty($user) && !is_numeric($user)) return false;
         $db = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
         $data = array(
-            "action" => $action,
+            "action" => clean($action),
             "success" => $success,
-            "value" => $value,
-            "user" => $user,
-            "ip" => $_SERVER["REMOTE_ADDR"],
+            "value" => clean($value),
+            "user" => clean($user),
+            "ip" => clean($_SERVER["REMOTE_ADDR"]),
             "timestamp" => now()
         );
         $db->insert($data);
@@ -45,11 +54,11 @@ function logTags($post, $before, $after, $user)
     if (!empty($user) && !is_numeric($user)) return false;
     $db = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
     $data = array(
-        "post" => $post,
-        "before" => $before,
-        "after" => $after,
-        "user" => $user,
-        "ip" => $_SERVER["REMOTE_ADDR"],
+        "post" => clean($post),
+        "before" => clean($before),
+        "after" => clean($after),
+        "user" => clean($user),
+        "ip" => clean($_SERVER["REMOTE_ADDR"]),
         "timestamp" => now()
     );
     $db->insert($data);
@@ -61,9 +70,9 @@ function visit()
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    if (empty($db->findOneBy(["ip", "=", $_SERVER["REMOTE_ADDR"]]))) {
+    if (empty($db->findOneBy(["ip", "=", clean($_SERVER["REMOTE_ADDR"])]))) {
         $data = array(
-            "ip" => $config["logs"] ? $_SERVER["REMOTE_ADDR"] : null,
+            "ip" => clean($_SERVER["REMOTE_ADDR"]),
             "timestamp" => now()
         );
         $db->insert($data);
@@ -140,12 +149,13 @@ function processTags($tags)
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    if (!is_array($tags)) $tags = explode(" ", $tags);
+    if (!is_array($tags)) $tags = explode(" ", clean($tags));
     $tagsArray = array();
     $_tags = "";
     $amount = 0;
     foreach ($tags as $tag) {
         if (!empty($tag)) {
+            $tag = clean($tag);
             if (startsWith($tag, "artist:") || startsWith($tag, "tag:") || startsWith($tag, "character:") || startsWith($tag, "char:") || startsWith($tag, "copyright:") || startsWith($tag, "copy:") || startsWith($tag, "meta:")) {
                 if (startsWith($tag, "artist:")) {
                     $type = "artist";
@@ -220,7 +230,7 @@ function processTags($tags)
 
 function checkTags(int $post, $tags)
 {
-    if (!is_array($tags)) $tags = toArrayFromSpaces($tags);
+    if (!is_array($tags)) $tags = toArrayFromSpaces(clean($tags));
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
@@ -228,7 +238,7 @@ function checkTags(int $post, $tags)
     $post = $db["tags"]->findById($post);
     if (empty($post)) return "Post does not exist";
     $relations = $db["tagRelations"]->findBy(["post", "=", $post["_id"]]);
-    $_tags = toStringWithSpaces($tags);
+    $_tags = clean(toStringWithSpaces($tags));
     processTags($_tags);
     if (!empty($relations)) {
         foreach ($relations as $rel) {
@@ -236,10 +246,11 @@ function checkTags(int $post, $tags)
         }
     }
     foreach ($tags as $tag) {
+        $tag = clean($tag);
         $_tag = $db["tags"]->findOneBy(["name", "=", $tag]);
         $data = array(
             "tag" => $_tag["_id"],
-            "name" => $_tag["name"],
+            "name" => clean($_tag["name"]),
             "type" => $_tag["type"],
             "order" => $_tag["order"],
             "post" => $post["_id"],

@@ -115,6 +115,9 @@ $lang = array(
     "waifu2x" => "Waifu2x",
     "respond" => "Respond",
     "visit" => "Visit",
+    "logs" => "Logs",
+    "tag_history" => "Tag History",
+    "for_post" => "For Post",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",
