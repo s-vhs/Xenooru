@@ -11,6 +11,11 @@ if (isset($_POST["upload"])) {
     require platformSlashes(__DIR__ . "/../library/getid3/getid3.php");
     $getID3 = new getID3;
     $error = false;
+    if ($config["captcha"]["enabled"]) {
+        if ($config["captcha"]["type"] == "hcaptcha") {
+            if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+        }
+    }
     if (!isset($_POST["acceptToS"])) $error = true && $smarty->assign("error", "You must read and comply with the Terms of Service!");
     if (!isset($_POST["acceptPrivacy"])) $error = true && $smarty->assign("error", "You must read and comply with the Privacy Policy!");
     if (!$error) {

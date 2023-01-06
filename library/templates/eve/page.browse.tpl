@@ -210,7 +210,7 @@
             <p class="font-bold mt-2">{$lang.options}</p>
             <ul class="text-sm">
                 {if $logged && $user.level >= 50}
-                    <li><a href="#/" class="text-red-500 hover:text-red-300">{$lang.edit}</a></li>
+                    <li>{$lang.edit}</li>
                 {/if}
                 <li class="font-bold"><a href="{$config.db.uploads.0}/{$post.file.database.file}" target="_blank"
                         class="text-red-500 hover:text-red-300">{$lang.original_image}</a></li>

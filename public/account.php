@@ -29,6 +29,11 @@ if (!$logged) {
         $password = $_POST["password"];
 
         $error = false;
+        if ($config["captcha"]["enabled"]) {
+            if ($config["captcha"]["type"] == "hcaptcha") {
+                if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+            }
+        }
         if (empty($username)) $error = true && $smarty->assign("error", "Username is empty!");
         if (empty($password)) $error = true && $smarty->assign("error", "Password is empty!");
         if (strlen($username) < 3 || strlen($username) > 50) $error = true && $smarty->assign("error", "Username needs to be between 3 and 50 characters.");
@@ -73,6 +78,11 @@ if (!$logged) {
         $email = $_POST["email"];
 
         $error = false;
+        if ($config["captcha"]["enabled"]) {
+            if ($config["captcha"]["type"] == "hcaptcha") {
+                if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+            }
+        }
         if (empty($username)) $error = true && $smarty->assign("error", "Username is empty!");
         if (empty($password)) $error = true && $smarty->assign("error", "Password is empty!");
         if (strlen($username) < 3 || strlen($username) > 50) $error = true && $smarty->assign("error", "Username needs to be between 3 and 50 characters.");

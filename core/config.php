@@ -5,6 +5,7 @@ $config["slogan"] = "Booru made simple";
 $config["logo"] = "logo.png";
 $config["chibi"] = "chibi.png";
 $config["logs"] = true; // Keep logs of actions?
+$config["debug"] = true;
 
 // Emails
 $config["email"]["general"] = "hello@domain.com";

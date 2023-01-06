@@ -5,13 +5,14 @@ $starttime = microtime(true);
 
 // Erst nehmen wir alles wichtige
 require "core/config.php";
+$config["debug"] == true ? error_reporting(E_ALL) && ini_set('display_errors', 1) : error_reporting(0) && ini_set('display_errors', 0);
 require_once "core/funky.php";
 
 // Nun initialisieren wir die Datenbank. Später erstellen wir die einzelnen Elemente
 require_once "library/SleekDB/Store.php";
 
 // Hier initialisieren wir die Template-Engine und erstellen direkt ein Element
-require_once "library/smarty/libs/smarty.class.php";
+require_once "library/smarty/libs/Smarty.class.php";
 $smarty = new Smarty();
 
 // Nun sind die Elemente für die Datenbank dran

@@ -69,6 +69,12 @@
             <label for="password">{$lang.password}:</label><br>
             <input type="password" minlength="8" maxlength="64" id="password" name="password" class="p-0"><br>
 
+            {if $config.captcha.enabled}
+                {if $config.captcha.type == "hcaptcha"}
+                    <div class="h-captcha mt-2 w-full" data-sitekey="{$config.captcha.hcaptcha.sitekey}"></div>
+                {/if}
+            {/if}
+
             <button type="submit" name="login"
                 class="px-2 mt-1 bg-red-500 text-white hover:bg-red-800">{$lang.login}</button>
 
@@ -93,6 +99,12 @@
 
             <label for="email">{$lang.email} ({$lang.optional}):</label><br>
             <input type="email" minlength="6" maxlength="320" id="email" name="email" class="p-0 mb-1"><br>
+
+            {if $config.captcha.enabled}
+                {if $config.captcha.type == "hcaptcha"}
+                    <div class="h-captcha mt-2 w-full" data-sitekey="{$config.captcha.hcaptcha.sitekey}"></div>
+                {/if}
+            {/if}
 
             <button type="submit" name="signup"
                 class="px-2 mt-1 bg-red-500 text-white hover:bg-red-800">{$lang.signup}</button>

@@ -91,6 +91,7 @@
                 <div class="h-captcha mt-2 w-full" data-sitekey="{$config.captcha.hcaptcha.sitekey}"></div>
             {/if}
         {/if}
+        
         <button type="submit" name="upload" class="bg-red-500 hover:bg-red-300 text-white p-0 px-2 mt-2 text-sm">
             {$lang.upload}
         </button>
