@@ -27,7 +27,8 @@
 
         <label for="search">{$lang.tags}</label>
         <p class="text-sm text-gray-700">{$lang.phrases.upload.tags}</p>
-        <textarea required name="tags" id="search" class="w-full min-h-[100px] px-1"></textarea><br>
+        <textarea required name="tags" onkeyup="doSearch()" id="search"
+            class="w-full min-h-[100px] px-1"></textarea><br>
         <div id="display" class="w-full px-1"></div>
 
         <div class="mb-2">
@@ -91,7 +92,7 @@
                 <div class="h-captcha mt-2 w-full" data-sitekey="{$config.captcha.hcaptcha.sitekey}"></div>
             {/if}
         {/if}
-        
+
         <button type="submit" name="upload" class="bg-red-500 hover:bg-red-300 text-white p-0 px-2 mt-2 text-sm">
             {$lang.upload}
         </button>

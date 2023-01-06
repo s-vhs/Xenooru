@@ -21,7 +21,7 @@ switch ($_GET["page"] ?? "browse") {
         break;
     case "search":
         $page = "search";
-        $skip = ((clean($_GET["pagination"]) ?? 1) - 1) * $config["perpage"]["posts"];
+        $skip = ((clean($_GET["pagination"] ?? 1)) - 1) * $config["perpage"]["posts"];
         $search = $db["posts"]->createQueryBuilder();
         $searchQuery = strtolower(trim(clean($_GET["query"])));
         if (($pos = strpos($searchQuery, "rating:")) !== false) {
@@ -92,7 +92,7 @@ switch ($_GET["page"] ?? "browse") {
             ->fetch();
         $totalPages = count($allPosts) / $config["perpage"]["posts"];
         $smarty->assign("totalpages", $totalPages);
-        $smarty->assign("pagination", clean($_GET["pagination"]) ?? 1);
+        $smarty->assign("pagination", clean($_GET["pagination"] ?? 1));
         $smarty->assign("posts", $posts);
         $smarty->assign("searchquery", $searchQuery);
         $pagis = array();
@@ -103,7 +103,7 @@ switch ($_GET["page"] ?? "browse") {
         $title = "{$lang["search"]}: {$searchQuery} - {$lang["page"]} " . (clean($_GET["pagination"] ?? 1));
         break;
     default:
-        $skip = ((clean($_GET["pagination"]) ?? 1) - 1) * $config["perpage"]["posts"];
+        $skip = ((clean($_GET["pagination"] ?? 1)) - 1) * $config["perpage"]["posts"];
         $posts = $db["posts"]->createQueryBuilder()
             ->orderBy(["_id" => "DESC"])
             ->limit($config["perpage"]["posts"])
@@ -112,7 +112,7 @@ switch ($_GET["page"] ?? "browse") {
             ->fetch();
         $totalPages = $db["posts"]->count() / $config["perpage"]["posts"];
         $smarty->assign("totalpages", $totalPages);
-        $smarty->assign("pagination", clean($_GET["pagination"]) ?? 1);
+        $smarty->assign("pagination", clean($_GET["pagination"] ?? 1));
         $smarty->assign("posts", $posts);
         $pagis = array();
         for ($i = 0; $i < $totalPages; $i++) {
@@ -120,7 +120,7 @@ switch ($_GET["page"] ?? "browse") {
         }
         $smarty->assign("pagis", $pagis);
         $page = "browse";
-        $title = "{$lang["browse"]} - {$lang["page"]} " . (clean($_GET["pagination"]) ?? 1);
+        $title = "{$lang["browse"]} - {$lang["page"]} " . (clean($_GET["pagination"] ?? 1));
 }
 $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
