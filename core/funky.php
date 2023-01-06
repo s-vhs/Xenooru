@@ -12,7 +12,7 @@ function genToken()
 
 function now()
 {
-    return date("d-m-y h:i:s");
+    return date("d-m-Y h:i:s");
 }
 
 function doLog($action, $success, $value = null, $user = null)

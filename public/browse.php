@@ -13,6 +13,9 @@ switch ($_GET["page"] ?? "browse") {
         $id = $_GET["id"];
         $post = $db["posts"]->findById($id);
         if (empty($post)) header("Location: browse.php") && die("post not found.");
+        $poster = $db["users"]->findById($post["user"]);
+        $smarty->assign("post", $post);
+        $smarty->assign("poster", $poster);
         $title = "{$post["tags"]} score:{$post["score"]} rating:{$post["rating"]} | {$post["_id"]}";
         $page = "post";
         break;
@@ -123,18 +126,26 @@ $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
 $smarty->assign("pagetitle", $title);
 
-if ($page == "browse" || $page == "search") {
+if ($page == "browse" || $page == "search" || $page == "post") {
     /* Tag creation begin */
     $tags["copyrights"] = array();
     $tags["characters"] = array();
     $tags["artists"] = array();
     $tags["tags"] = array();
     $tags["metas"] = array();
-    $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 1])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
-    $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 2])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
-    $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 3])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
-    $_tags["tags"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 4])->limit(30)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
-    $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 5])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    if ($page == "browse" || $page == "search") {
+        $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 1])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 2])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 3])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["tags"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 4])->limit(30)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "=", 5])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    } elseif ($page == "post") {
+        $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 1], "AND", ["post", "=", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 2], "AND", ["post", "=", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 3], "AND", ["post", "=", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["tags"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 4], "AND", ["post", "=", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 5], "AND", ["post", "=", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    }
     foreach ($_tags["copyrights"] as $tag) {
         $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
         \array_splice($_tags["copyrights"], 0, 1);

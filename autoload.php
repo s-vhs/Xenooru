@@ -64,8 +64,9 @@ $pages = array(
 
 // Nun alles unwichtige andere
 visit();
-$endtime = microtime(true);
-$smarty->assign("loadingtime", substr($endtime - $starttime, 0, -10));
+$url = trim(parse_url((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER["HTTP_HOST"]}{$_SERVER["REQUEST_URI"]}", PHP_URL_SCHEME) . '://' . parse_url((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER["HTTP_HOST"]}{$_SERVER["REQUEST_URI"]}", PHP_URL_HOST), "/");
+$url = $url . substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/') + 1);
+$smarty->assign("url", $url);
 
 // Theme und/oder Sprache ändern
 if (isset($_POST["customize"])) {
@@ -94,3 +95,6 @@ foreach (glob(platformSlashes($config["smarty"]["template"] . "*")) as $_theme) 
 }
 $smarty->assign("langs", $langs);
 $smarty->assign("themes", $themes);
+
+$endtime = microtime(true);
+$smarty->assign("loadingtime", substr($endtime - $starttime, 0, -10));
