@@ -130,7 +130,7 @@ function genUuid()
 function startsWith($string, $startString)
 {
     $len = strlen($startString);
-    return (substr($string, 0, $len) === $startString);
+    return (substr($string, 0, $len) == $startString);
 }
 
 function toStringWithSpaces(array $array)
@@ -147,9 +147,9 @@ function toArrayFromSpaces(string $string)
 {
     if (empty($string)) return false;
     $_items = array();
-    $array = explode(" ", trim(substr(clean($string), 0, 75)));
+    $array = explode(" ", trim(clean($string)));
     foreach ($array as $item) {
-        array_push($_items, trim($item));
+        array_push($_items, trim(substr($item, 0, 75)));
     }
     return $_items;
 }
@@ -159,11 +159,11 @@ function processTags($tags)
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    if (!is_array($tags)) $tags = explode(" ", clean($tags));
+    if (!is_array($tags)) $tags = explode(" ", $tags);
     $tagsArray = array();
     $_tags = "";
     foreach ($tags as $tag) {
-        if (!empty($tag)) {
+        if (!empty(trim($tag))) {
             $tag = strtolower(substr(clean($tag), 0, 75));
             if (startsWith($tag, "artist:") || startsWith($tag, "tag:") || startsWith($tag, "character:") || startsWith($tag, "char:") || startsWith($tag, "copyright:") || startsWith($tag, "copy:") || startsWith($tag, "meta:")) {
                 if (startsWith($tag, "artist:")) {
@@ -176,29 +176,25 @@ function processTags($tags)
                         $tag = substr($tag, 5);
                     else
                         $tag = substr($tag, 10);
-                    $chosen = true;
                 } elseif (startsWith($tag, "meta:")) {
                     $type = "meta";
                     $tag = substr($tag, 5);
-                    $chosen = true;
                 } elseif (startsWith($tag, "tag:")) {
                     $type = "tag";
                     $tag = substr($tag, 4);
-                    $chosen = true;
                 } else {
                     $type = "copyright";
                     if (startsWith($tag, "copy:"))
                         $tag = substr($tag, 5);
                     else
                         $tag = substr($tag, 10);
-                    $chosen = true;
                 }
+                $chosen = true;
             } else {
                 $type = "tag";
-                $chosen = false;
             }
-            $_tag = $db->findBy(["name", "=", $tag]);
-            if (($chosen && empty($db->findBy([["name", "=", $tag], "AND", ["type", "=", $type]]))) || (!$chosen && empty($_tag))) {
+            $_tag = $db->findOneBy([["name", "=", $tag], "AND", ["type", "=", $type]]);
+            if (empty($_tag)) {
                 switch ($type) {
                     case "copyright":
                         $order = 1;
@@ -228,10 +224,10 @@ function processTags($tags)
         }
     }
     if (!empty($tagsArray)) {
-        $tagsArray = array_unique($tagsArray);
+        // $tagsArray = array_unique($tagsArray);
         sort($tagsArray);
         foreach ($tagsArray as $tag) {
-            $_tags .= $tag . " ";
+            $_tags .= clean($tag) . " ";
         }
     }
     return array("tags" => trim($_tags), "amount" => count($tagsArray));
@@ -248,7 +244,8 @@ function checkTags(int $post, $tags)
     if (empty($post)) return "Post does not exist";
     $relations = $db["tagRelations"]->findBy(["post", "=", $post["_id"]]);
     $_tags = clean(toStringWithSpaces($tags));
-    processTags($_tags);
+    $tags = toArrayFromSpaces(processTags($_tags)["tags"]);
+    // print_r($tags);
     if (!empty($relations)) {
         foreach ($relations as $rel) {
             if (!in_array($rel["name"], $tags)) $db["tagRelations"]->deleteById($rel["_id"]);
@@ -265,7 +262,7 @@ function checkTags(int $post, $tags)
             "post" => $post["_id"],
             "timestamp" => now()
         );
-        if (empty($db["tagRelations"]->findBy([["post", "=", $post["_id"]], "AND", ["name", "=", $tag]]))) $db["tagRelations"]->insert($data);
+        empty($db["tagRelations"]->findBy([["post", "=", $post["_id"]], "AND", ["name", "=", $tag]])) ? $db["tagRelations"]->insert($data) : null;
     }
     return $tags;
 }
