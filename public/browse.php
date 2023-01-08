@@ -161,6 +161,8 @@ if ($page == "browse" || $page == "search" || $page == "post") {
     }
     foreach ($_tags["artists"] as $tag) {
         $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        \array_splice($_tags["artists"], 0, 1);
+        array_push($tags["artists"], $tag);
     }
     foreach ($_tags["tags"] as $tag) {
         $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
