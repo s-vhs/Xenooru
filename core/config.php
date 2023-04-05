@@ -33,7 +33,7 @@ $config["upload"]["allowed"]["video"] = array(
     ".avi",
     ".mkv",
 );
-$config["upload"]["min"] = 1; // Min amount of tags on new/existing post
+$config["upload"]["min"] = 5; // Min amount of tags on new/existing post
 
 // Thumbnails
 $config["thumbnail"]["enabled"] = true; // Requires Imagick, generation will keep aspect ratio!

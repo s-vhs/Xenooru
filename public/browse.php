@@ -203,7 +203,8 @@ if ($page == "post") {
 
                     $source = clean($_POST["source"]);
                     $title = clean($_POST["title"]);
-                    $tags = processTags(clean($_POST["tags"]));
+                    $tags = processTags(toArrayFromSpaces(clean($_POST["tags"])));
+                    $tagsRaw = $tags["raw"];
 
                     if ($tags["amount"] < $config["upload"]["min"]) {
                         $error = true;
@@ -215,9 +216,10 @@ if ($page == "post") {
                             "source" => $source,
                             "title" => $title,
                             "tags" => strtolower($tags),
+                            "raw" => strtolower($tagsRaw),
                             "rating" => $rating
                         );
-                        checkTags($post["_id"], toArrayFromSpaces($tags));
+                        print_r(checkTags($post["_id"], toArrayFromSpaces($tagsRaw)));
                         logTags($post["_id"], $rating, $post["tags"], $tags, $title, $source, $user["_id"], $user["username"]);
                         $db["posts"]->updateById($post["_id"], $data);
                         doLog("edit", true, $post["_id"], $user["_id"]);

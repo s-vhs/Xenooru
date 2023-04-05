@@ -31,7 +31,7 @@ if (!$logged) {
         $error = false;
         if ($config["captcha"]["enabled"]) {
             if ($config["captcha"]["type"] == "hcaptcha") {
-                if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+                if (!hCaptcha($_POST["h-captcha-response"])) $error = true && $smarty->assign("error", "Captcha is wrong!");
             }
         }
         if (empty($username)) $error = true && $smarty->assign("error", "Username is empty!");
@@ -80,7 +80,7 @@ if (!$logged) {
         $error = false;
         if ($config["captcha"]["enabled"]) {
             if ($config["captcha"]["type"] == "hcaptcha") {
-                if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
+                if (!hCaptcha($_POST["h-captcha-response"])) $error = true && $smarty->assign("error", "Captcha is wrong!");
             }
         }
         if (empty($username)) $error = true && $smarty->assign("error", "Username is empty!");
@@ -93,12 +93,15 @@ if (!$logged) {
         if (!$error) {
             $check = $db["users"]->findOneBy(["username", "=", $username]);
             if (empty($check)) {
+                $level = $config["default"]["level"];
+                if (empty($db["users"]->findAll()))
+                    $level = 100;
                 $password = password_hash($password, PASSWORD_BCRYPT);
                 $data = array(
                     "username" => $username,
                     "password" => $password,
                     "email" => $email,
-                    "level" => $config["default"]["level"],
+                    "level" => $level,
                     "theme" => $usertheme,
                     "lang" => $userlang,
                     "blacklist" => null,

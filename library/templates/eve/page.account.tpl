@@ -1,6 +1,6 @@
 {include file="part.menu.tpl"}
 
-<div class="mx-4 mt-2 mx-auto animate__animated animate__fadeIn">
+<div class="mx-4 mt-2 animate__animated animate__fadeIn">
     {if $tab == "home"}
         {if $logged}
             <h1 class="text-xl font-bold">

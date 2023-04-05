@@ -80,7 +80,7 @@ function visit()
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    if (empty($db->findOneBy(["ip", "=", clean($_SERVER["REMOTE_ADDR"])]))) {
+    if (empty($db->findOneBy(["ip", "==", clean($_SERVER["REMOTE_ADDR"])]))) {
         $data = array(
             "ip" => clean($_SERVER["REMOTE_ADDR"]),
             "timestamp" => now()
@@ -143,128 +143,217 @@ function toStringWithSpaces(array $array)
     return trim($_items);
 }
 
-function toArrayFromSpaces(string $string)
+function toArrayFromSpaces(string $string): array
 {
-    if (empty($string)) return false;
-    $_items = array();
-    $array = explode(" ", trim(clean($string)));
-    foreach ($array as $item) {
-        array_push($_items, trim(substr($item, 0, 75)));
+    $trimmedString = trim(clean($string));
+    if (empty($trimmedString)) {
+        return [];
     }
-    return $_items;
+    $items = explode(' ', $trimmedString);
+    $result = [];
+    foreach ($items as $item) {
+        $result[] = substr(trim($item), 0, 75);
+    }
+    return $result;
 }
+
+// function toArrayFromSpaces(string $string)
+// {
+//     if (empty($string)) return false;
+//     $_items = array();
+//     $array = explode(" ", trim(clean($string)));
+//     foreach ($array as $item) {
+//         array_push($_items, trim(substr($item, 0, 75)));
+//     }
+//     return $_items;
+// }
 
 function processTags($tags)
 {
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
-    $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
-    if (!is_array($tags)) $tags = explode(" ", $tags);
-    $tagsArray = array();
+
+    if (!is_array($tags)) $tags = toArrayFromSpaces($tags);
+
+    $db = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]);
+    $tagsArray = [];
+    $tagsArrayRaw = [];
     $_tags = "";
+    $_tagsRaw = "";
+
     foreach ($tags as $tag) {
-        if (!empty(trim($tag))) {
-            $tag = strtolower(substr(clean($tag), 0, 75));
-            if (startsWith($tag, "artist:") || startsWith($tag, "tag:") || startsWith($tag, "character:") || startsWith($tag, "char:") || startsWith($tag, "copyright:") || startsWith($tag, "copy:") || startsWith($tag, "meta:")) {
-                if (startsWith($tag, "artist:")) {
-                    $type = "artist";
-                    $tag = substr($tag, 7);
-                    $chosen = true;
-                } elseif (startsWith($tag, "character:") || startsWith($tag, "char:")) {
-                    $type = "character";
-                    if (startsWith($tag, "char:"))
-                        $tag = substr($tag, 5);
-                    else
-                        $tag = substr($tag, 10);
-                } elseif (startsWith($tag, "meta:")) {
-                    $type = "meta";
-                    $tag = substr($tag, 5);
-                } elseif (startsWith($tag, "tag:")) {
-                    $type = "tag";
-                    $tag = substr($tag, 4);
-                } else {
-                    $type = "copyright";
-                    if (startsWith($tag, "copy:"))
-                        $tag = substr($tag, 5);
-                    else
-                        $tag = substr($tag, 10);
-                }
-                $chosen = true;
-            } else {
-                $type = "tag";
-            }
-            $_tag = $db->findOneBy([["name", "=", $tag], "AND", ["type", "=", $type]]);
-            if (empty($_tag)) {
-                switch ($type) {
-                    case "copyright":
-                        $order = 1;
-                        break;
-                    case "character":
-                        $order = 2;
-                        break;
-                    case "artist":
-                        $order = 3;
-                        break;
-                    case "tag":
-                        $order = 4;
-                        break;
-                    default:
-                        $order = 5;
-                }
-                $data = array(
-                    "name" => $tag,
-                    "type" => $type,
-                    "order" => $order,
-                    "modified" => now(),
-                    "timestamp" => now()
-                );
-                $db->insert($data);
-            }
-            array_push($tagsArray, $tag);
+        $tag = trim($tag);
+        if (empty($tag)) {
+            continue;
         }
+
+        $tagRaw = $tag;
+        $tag = substr(clean($tag), 0, 75);
+        $tag = strtolower($tag);
+
+        $type = "tag";
+        $prefixes = ["artist:", "a:", "character:", "char:", "c:", "meta:", "m:", "copyright:", "copy:", "cp:", "tag:", "t:"];
+        foreach ($prefixes as $prefix) {
+            if (startsWith($tag, $prefix)) {
+                switch ($prefix) {
+                    case "artist:":
+                    case "a:":
+                        $type = "artist";
+                        break;
+                    case "character:":
+                    case "char:":
+                    case "c:":
+                        $type = "character";
+                        break;
+                    case "meta:":
+                    case "m:":
+                        $type = "meta";
+                        break;
+                    case "copyright:":
+                    case "copy:":
+                    case "cp:":
+                        $type = "copyright";
+                        break;
+                    case "tag:":
+                    case "t:":
+                    default:
+                        $type = "tag";
+                        break;
+                }
+                $tag = substr($tag, strlen($prefix));
+                break;
+            }
+        }
+
+        $_tag = $db->findOneBy([["name", "==", $tag], "AND", ["type", "==", $type]]);
+        if (empty($_tag)) {
+            switch ($type) {
+                case "copyright":
+                    $order = 1;
+                    break;
+                case "character":
+                    $order = 2;
+                    break;
+                case "artist":
+                    $order = 3;
+                    break;
+                case "tag":
+                default:
+                    $order = 4;
+                    break;
+            }
+            $data = [
+                "name" => $tag,
+                "type" => $type,
+                "order" => $order,
+                "modified" => now(),
+                "timestamp" => now(),
+            ];
+            $db->insert($data);
+        }
+
+        $tagsArray[] = $tag;
+        $tagsArrayRaw[] = $tagRaw;
     }
-    if (!empty($tagsArray)) {
-        // $tagsArray = array_unique($tagsArray);
+
+    if (!empty($tagsArray) && !empty($tagsArrayRaw)) {
         sort($tagsArray);
         foreach ($tagsArray as $tag) {
-            $_tags .= clean($tag) . " ";
+            $_tags .= trim(clean($tag)) . " ";
+        }
+
+        sort($tagsArrayRaw);
+        foreach ($tagsArrayRaw as $tag) {
+            $_tagsRaw .= trim(clean($tag)) . " ";
         }
     }
-    return array("tags" => trim($_tags), "amount" => count($tagsArray));
+
+    return [
+        "tags" => trim($_tags),
+        "raw" => $_tagsRaw,
+        "amount" => count($tagsArray),
+    ];
 }
 
-function checkTags(int $post, $tags)
+function whateverThisDoes($tag)
 {
-    if (!is_array($tags)) $tags = toArrayFromSpaces(clean($tags));
+    $type = "tag";
+    $prefixes = ["artist:", "a:", "character:", "char:", "c:", "meta:", "m:", "copyright:", "copy:", "cp:", "tag:", "t:"];
+    foreach ($prefixes as $prefix) {
+        if (startsWith($tag, $prefix)) {
+            switch ($prefix) {
+                case "artist:":
+                case "a:":
+                    $type = "artist";
+                    break;
+                case "character:":
+                case "char:":
+                case "c:":
+                    $type = "character";
+                    break;
+                case "meta:":
+                case "m:":
+                    $type = "meta";
+                    break;
+                case "copyright:":
+                case "copy:":
+                case "cp:":
+                    $type = "copyright";
+                    break;
+                case "tag:":
+                case "t:":
+                default:
+                    $type = "tag";
+                    break;
+            }
+            $tag = substr($tag, strlen($prefix));
+            break;
+        }
+    }
+    return array($type, $tag);
+}
+
+function checkTags(int $post, $raws)
+{
+    if (!is_array($raws)) $raws = toArrayFromSpaces(clean($raws));
     require "config.php";
     require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
     $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
     $db["tagRelations"] = new \SleekDB\Store("tagRelations", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags-Verknüpfungen
     $post = $db["tags"]->findById($post);
     if (empty($post)) return "Post does not exist";
-    $relations = $db["tagRelations"]->findBy(["post", "=", $post["_id"]]);
-    $_tags = clean(toStringWithSpaces($tags));
-    $tags = toArrayFromSpaces(processTags($_tags)["tags"]);
+    // $relations = $db["tagRelations"]->findBy(["post", "==", $post["_id"]]);
+    // $_tags = clean(toStringWithSpaces($tags));
+    // $tags = toArrayFromSpaces(processTags($_tags)["raw"]);
     // print_r($tags);
-    if (!empty($relations)) {
-        foreach ($relations as $rel) {
-            if (!in_array($rel["name"], $tags)) $db["tagRelations"]->deleteById($rel["_id"]);
+    // if (!empty($relations)) {
+    //     foreach ($relations as $rel) {
+    //         if (!in_array($rel["name"], $tags)) $db["tagRelations"]->deleteById($rel["_id"]);
+    //     }
+    // }
+    foreach ($raws as $tag) {
+        $type = whateverThisDoes($tag)[0];
+        $tag = whateverThisDoes($tag)[1];
+        $search = $db["tagRelations"]->findBy([["post", "==", $post["_id"]], "AND", ["name", "==", $tag], "AND", ["type", "==", $type]]);
+        if (empty($search)) {
+            $tag = strtolower(substr(clean($tag), 0, 75));
+            $_tag = $db["tags"]->findOneBy([["name", "==", $tag], "AND", ["type", "==", $type]]);
+            $data = array(
+                "tag" => $_tag["_id"],
+                "name" => clean($_tag["name"]),
+                "type" => $_tag["type"],
+                "order" => $_tag["order"],
+                "post" => $post["_id"],
+                "timestamp" => now()
+            );
+            empty($db["tagRelations"]->findBy([["post", "==", $post["_id"]], "AND", ["name", "==", $tag], "AND", ["type", "==", $_tag["type"]]])) ? $db["tagRelations"]->insert($data) : null;
+        } else {
+            $rel = $db["tagRelations"]->findOneBy([["post", "==", $post["_id"]], "AND", ["name", "==", $tag]]);
+            if (!empty($rel["_id"]))
+                $db["tagRelations"]->deleteById($rel["_id"]);
         }
     }
-    foreach ($tags as $tag) {
-        $tag = strtolower(substr(clean($tag), 0, 75));
-        $_tag = $db["tags"]->findOneBy(["name", "=", $tag]);
-        $data = array(
-            "tag" => $_tag["_id"],
-            "name" => clean($_tag["name"]),
-            "type" => $_tag["type"],
-            "order" => $_tag["order"],
-            "post" => $post["_id"],
-            "timestamp" => now()
-        );
-        empty($db["tagRelations"]->findBy([["post", "=", $post["_id"]], "AND", ["name", "=", $tag]])) ? $db["tagRelations"]->insert($data) : null;
-    }
-    return $tags;
+    return $raws;
 }
 
 function isLandsape($file)

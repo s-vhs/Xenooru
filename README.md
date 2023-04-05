@@ -23,7 +23,6 @@ Saintly and I spent a lot of time developing this software. If you like what we 
 - Customize `/core/config.php`
 - Make `/public/` the root-directory from the webserver
 - Create an account and navigate to the database folder (`/database/` by default)
-- Edit `/users/1.json` and set `level` from `50` to `100` for administrator priviliges
 - The basic-installation is done, for further details, read the documentation
 
 ## Documentation
@@ -32,7 +31,7 @@ Saintly and I spent a lot of time developing this software. If you like what we 
 
 ## Support
 
-For support, email me at [thencametears@yandex.com](mailto:thencametears@yandex.com) or join the [Team H33T et Henai Discord](https://discord.gg/uahG2fKVvg), my username on Discord is either `Heretic` or `Sieur`, go figure it out yourself.
+For support, email me at [thencametears@yandex.com](mailto:thencametears@yandex.com) or join the [Team H33T Support-Discord](https://discord.gg/uahG2fKVvg), my username on Discord is `Forsaken Maiden` or whatever, go figure it out yourself.
 
 ## Demo
 

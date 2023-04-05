@@ -14,7 +14,7 @@
     </p>
     <p>
         {$lang.developed_by} <a href="https://github.com/s-vhs" target="_blank"
-            class="underline hover:text-red-300">Sieur</a>,
+            class="underline hover:text-red-300">Elysium</a>,
         <a href="https://github.com/saintly2k" target="_blank" class="underline hover:text-red-300">Saintly2k</a> &
         <a href="https://github.com/s-vhs/Xenooru/graphs/contributors" target="_blank"
             class="underline hover:text-red-300">{$lang.the_team}</a>
