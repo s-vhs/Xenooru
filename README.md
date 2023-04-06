@@ -22,12 +22,12 @@ Saintly and I spent a lot of time developing this software. If you like what we 
 - Clone this repository
 - Customize `/core/config.php`
 - Make `/public/` the root-directory from the webserver
-- Create an account and navigate to the database folder (`/database/` by default)
+- Create an account
 - The basic-installation is done, for further details, read the documentation
 
 ## Documentation
 
-[Documentation at the GitHub Wiki](https://github.com/s-vhs/Xenooru/Wiki)
+[Documentation at the GitHub Wiki](https://github.com/s-vhs/Xenooru/wiki)
 
 ## Support
 

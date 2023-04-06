@@ -1,8 +1,32 @@
-function fill(Value, search = "search", display = "display") {
+function fill(Value, search = "search", display = "display", Current = "tag:") {
+    let inputField = document.getElementById(search);
+    let cursorPosition = getCursorPosition(inputField);
+    deleteCharactersBeforePosition(inputField, cursorPosition, Current.length);
+
     $("#" + search).val($("#" + search).val() + Value);
     $("#" + display).hide();
     $("#" + search).focus();
 }
+
+function getCursorPosition(inputField) {
+    if (inputField.selectionStart) {
+        return inputField.selectionStart;
+    } else if (document.selection) {
+        inputField.focus();
+        let range = document.selection.createRange();
+        range.moveStart('character', -inputField.value.length);
+        return range.text.length;
+    }
+    return 0;
+}
+
+function deleteCharactersBeforePosition(inputField, position, numberOfCharacters) {
+    let currentValue = inputField.value;
+    let newValue = currentValue.substring(0, position - numberOfCharacters) + currentValue.substring(position);
+    inputField.value = newValue;
+    inputField.setSelectionRange(position - numberOfCharacters, position - numberOfCharacters);
+}
+
 
 function doSearch(search = "search", display = "display") {
     let name = $("#" + search).val();

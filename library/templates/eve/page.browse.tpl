@@ -19,12 +19,12 @@
                     <li class="font-bold">{$lang.copyrights}</li>
                     {foreach from=$tags.copyrights item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                            <a href="?page=search&query={$item.full}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
                             {$item.count}
                         </li>
                     {/foreach}
@@ -35,12 +35,12 @@
                     <li class="font-bold">{$lang.characters}</li>
                     {foreach from=$tags.characters item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-lime-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -52,12 +52,12 @@
                     <li class="font-bold">{$lang.artists}</li>
                     {foreach from=$tags.artists item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-indigo-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -69,12 +69,12 @@
                     <li class="font-bold">{$lang.general}</li>
                     {foreach from=$tags.tags item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-red-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -86,12 +86,12 @@
                     <li class="font-bold">{$lang.metas}</li>
                     {foreach from=$tags.metas item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-orange-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -107,12 +107,12 @@
                     <li class="font-bold">{$lang.copyrights}</li>
                     {foreach from=$tags.copyrights item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                            <a href="?page=search&query={$item.full}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
                             {$item.count}
                         </li>
                     {/foreach}
@@ -123,12 +123,12 @@
                     <li class="font-bold">{$lang.characters}</li>
                     {foreach from=$tags.characters item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-lime-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -140,12 +140,12 @@
                     <li class="font-bold">{$lang.artists}</li>
                     {foreach from=$tags.artists item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-indigo-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -157,12 +157,12 @@
                     <li class="font-bold">{$lang.general}</li>
                     {foreach from=$tags.tags item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-red-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -174,12 +174,12 @@
                     <li class="font-bold">{$lang.metas}</li>
                     {foreach from=$tags.metas item=item key=key name=name}
                         <li>
-                            <a href="wiki.php?term={$item.name}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.name}"
+                            <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.name}"
+                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.name}"
+                            <a href="?page=search&query={$item.full}"
                                 class="text-orange-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>

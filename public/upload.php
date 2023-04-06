@@ -30,16 +30,17 @@ if (isset($_POST["upload"])) {
                 default:
                     $rating = "safe";
             }
+
             $source = clean($_POST["source"]);
             $title = clean($_POST["title"]);
-            $tags = processTags(clean($_POST["tags"]));
+            $amount = getTagAmount(clean($_POST["tags"]));
+
             // Hat mindestens x tags?
-            if ($tags["amount"] < $config["upload"]["min"]) {
+            if ($amount < $config["upload"]["min"]) {
                 $error = true;
-                doLog("upload", false, "only {$tags["amount"]} of {$config["upload"]["min"]}", $user["_id"]);
+                doLog("upload", false, "only {$amount} of {$config["upload"]["min"]}", $user["_id"]);
                 $smarty->assign("error", "You need to have at least {$config["upload"]["min"]} tags!");
             } else {
-                $tags = $tags["tags"];
                 // Nun beginnt die Bildverarbeitung
                 if (!empty($_FILES["file"]["tmp_name"])) {
                     if ($_FILES["file"]["size"] > $config["upload"]["max"]) {
@@ -98,7 +99,7 @@ if (isset($_POST["upload"])) {
                                     $data = array(
                                         "source" => $source,
                                         "title" => $title,
-                                        "tags" => strtolower($tags),
+                                        "tags" => "",
                                         "rating" => $rating,
                                         "score" => 0,
                                         "file" => array(
@@ -123,7 +124,11 @@ if (isset($_POST["upload"])) {
                                     );
                                     $post = $db["posts"]->insert($data);
                                     if ($post) {
-                                        checkTags($post["_id"], toArrayFromSpaces($tags));
+                                        $tags = processTags($post["_id"], clean($_POST["tags"]));
+                                        $data = [
+                                            "tags" => $tags
+                                        ];
+                                        $db["posts"]->updateById($post["_id"], $data);
                                         logTags($post["_id"], $rating, "", $tags, $source, $title, $user["_id"], $user["username"]);
                                         doLog("upload", true, $post["_id"], $user["_id"]);
                                         header("Location: browse.php?page=post&id={$post["_id"]}");

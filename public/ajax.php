@@ -11,7 +11,7 @@ if (isset($_POST["search"])) {
         echo "<ul class=\"text-sm\">";
         if (strlen($_tag) > 1) {
             $tags = $db["tags"]->createQueryBuilder()
-                ->search(["name"], $_tag)
+                ->search(["full"], $_tag)
                 ->orderBy(["name" => "ASC"]) // sort result
                 ->getQuery()
                 ->fetch();
@@ -27,7 +27,7 @@ if (isset($_POST["search"])) {
                         $color = "red";
                     else
                         $color = "orange";
-                    echo "<li onclick=\"fill('" . substr($tag["name"], strlen($_tag)) . " ', '{$search}', '{$display}')\" class=\"text-{$color}-500 cursor-pointer\">" . str_replace("_", " ", $tag["name"]) . " (" . count($db["tagRelations"]->findBy(["name", "=", $tag["name"]])) . ")</li>";
+                    echo "<li onclick=\"fill('" . $tag["full"] . " ', '{$search}', '{$display}', '{$_tag}')\" class=\"text-{$color}-500 cursor-pointer\">" . str_replace("_", " ", $tag["name"]) . " (" . count($db["tagRelations"]->findBy([["name", "==", $tag["name"]], "AND", ["type", "==", $tag["type"]]])) . ")</li>";
                 }
             } else {
                 echo "<li>Nothing found...</li>";

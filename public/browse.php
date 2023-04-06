@@ -150,27 +150,27 @@ if ($page == "browse" || $page == "search" || $page == "post") {
         $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 5], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
     }
     foreach ($_tags["copyrights"] as $tag) {
-        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        $tag["count"] = count($db["tagRelations"]->findBy(["full", "=", $tag["full"]]));
         \array_splice($_tags["copyrights"], 0, 1);
         array_push($tags["copyrights"], $tag);
     }
     foreach ($_tags["characters"] as $tag) {
-        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        $tag["count"] = count($db["tagRelations"]->findBy(["full", "=", $tag["full"]]));
         \array_splice($_tags["characters"], 0, 1);
         array_push($tags["characters"], $tag);
     }
     foreach ($_tags["artists"] as $tag) {
-        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        $tag["count"] = count($db["tagRelations"]->findBy(["full", "=", $tag["full"]]));
         \array_splice($_tags["artists"], 0, 1);
         array_push($tags["artists"], $tag);
     }
     foreach ($_tags["tags"] as $tag) {
-        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        $tag["count"] = count($db["tagRelations"]->findBy(["full", "=", $tag["full"]]));
         \array_splice($_tags["tags"], 0, 1);
         array_push($tags["tags"], $tag);
     }
     foreach ($_tags["metas"] as $tag) {
-        $tag["count"] = count($db["tagRelations"]->findBy(["name", "=", $tag["name"]]));
+        $tag["count"] = count($db["tagRelations"]->findBy(["full", "=", $tag["full"]]));
         \array_splice($_tags["metas"], 0, 1);
         array_push($tags["metas"], $tag);
     }
@@ -203,15 +203,14 @@ if ($page == "post") {
 
                     $source = clean($_POST["source"]);
                     $title = clean($_POST["title"]);
-                    $tags = processTags(toArrayFromSpaces(clean($_POST["tags"])));
-                    $tagsRaw = $tags["raw"];
+                    $amount = getTagAmount(clean($_POST["tags"]));
 
-                    if ($tags["amount"] < $config["upload"]["min"]) {
+                    if ($amount < $config["upload"]["min"]) {
                         $error = true;
-                        doLog("upload", false, "only {$tags["amount"]} of {$config["upload"]["min"]}. post: " . $post["_id"], $user["_id"]);
+                        doLog("upload", false, "only {$amount} of {$config["upload"]["min"]}. post: " . $post["_id"], $user["_id"]);
                         $smarty->assign("error", "You need to have at least {$config["upload"]["min"]} tags!");
                     } else {
-                        $tags = $tags["tags"];
+                        $tags = processTags($post["_id"], clean($_POST["tags"]));
                         $data = array(
                             "source" => $source,
                             "title" => $title,
@@ -219,7 +218,6 @@ if ($page == "post") {
                             "raw" => strtolower($tagsRaw),
                             "rating" => $rating
                         );
-                        print_r(checkTags($post["_id"], toArrayFromSpaces($tagsRaw)));
                         logTags($post["_id"], $rating, $post["tags"], $tags, $title, $source, $user["_id"], $user["username"]);
                         $db["posts"]->updateById($post["_id"], $data);
                         doLog("edit", true, $post["_id"], $user["_id"]);
