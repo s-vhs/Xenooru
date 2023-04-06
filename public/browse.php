@@ -142,7 +142,10 @@ if ($page == "browse" || $page == "search" || $page == "post") {
     } elseif ($page == "post") {
         $id = clean($_GET["id"]);
         $post = $db["posts"]->findById($id);
-        if (empty($post)) header("Location: browse.php") && die("post not found.");
+        if (empty($post)) {
+            header("Location: browse.php");
+            die("post not found.");
+        }
         $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 1], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 2], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "=", 3], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
@@ -178,56 +181,55 @@ if ($page == "browse" || $page == "search" || $page == "post") {
     /* Tag creation end */
 }
 
-if ($page == "post") {
-    if ($logged) {
-        if (isset($_POST["edit"])) {
-            $error = false;
-            if ($config["captcha"]["enabled"]) {
-                if ($config["captcha"]["type"] == "hcaptcha") {
-                    if (!hCaptcha($_POST['h-captcha-response'])) $error = true && $smarty->assign("error", "Captcha is wrong!");
-                }
+if ($page == "post" && $logged && isset($_POST["edit"])) {
+    $error = false;
+
+    if ($config["captcha"]["enabled"] && $config["captcha"]["type"] == "hcaptcha") {
+        if (!hCaptcha($_POST['h-captcha-response'])) {
+            $error = true;
+            $smarty->assign("error", "Captcha is wrong!");
+        }
+    }
+
+    if (!$error) {
+        if (isset($_POST["rating"])) {
+            switch ($_POST["rating"]) {
+                case "questionable":
+                    $rating = "questionable";
+                    break;
+                case "explicit":
+                    $rating = "explicit";
+                    break;
+                default:
+                    $rating = "safe";
             }
 
-            if (!$error) {
-                if (isset($_POST["rating"])) {
-                    switch ($_POST["rating"]) {
-                        case "questionable":
-                            $rating = "questionable";
-                            break;
-                        case "explicit":
-                            $rating = "explicit";
-                            break;
-                        default:
-                            $rating = "safe";
-                    }
+            $source = clean($_POST["source"]);
+            $title = clean($_POST["title"]);
+            $tagsRaw = clean($_POST["tags"]);
+            $amount = getTagAmount($tagsRaw);
 
-                    $source = clean($_POST["source"]);
-                    $title = clean($_POST["title"]);
-                    $amount = getTagAmount(clean($_POST["tags"]));
-
-                    if ($amount < $config["upload"]["min"]) {
-                        $error = true;
-                        doLog("upload", false, "only {$amount} of {$config["upload"]["min"]}. post: " . $post["_id"], $user["_id"]);
-                        $smarty->assign("error", "You need to have at least {$config["upload"]["min"]} tags!");
-                    } else {
-                        $tags = processTags($post["_id"], clean($_POST["tags"]));
-                        $data = array(
-                            "source" => $source,
-                            "title" => $title,
-                            "tags" => strtolower($tags),
-                            "raw" => strtolower($tagsRaw),
-                            "rating" => $rating
-                        );
-                        logTags($post["_id"], $rating, $post["tags"], $tags, $title, $source, $user["_id"], $user["username"]);
-                        $db["posts"]->updateById($post["_id"], $data);
-                        doLog("edit", true, $post["_id"], $user["_id"]);
-                        header("Location: browse.php?page=post&id=" . $post["_id"]);
-                    }
-                } else {
-                    doLog("edit", false, "no rating given. post: " . $post["_id"], $user["_id"]);
-                    $smarty->assign("error", "No rating given!");
-                }
+            if ($amount < $config["upload"]["min"]) {
+                $error = true;
+                doLog("upload", false, "only {$amount} of {$config["upload"]["min"]}. post: " . $post["_id"], $user["_id"]);
+                $smarty->assign("error", "You need to have at least {$config["upload"]["min"]} tags!");
+            } else {
+                $tags = processTags($post["_id"], $tagsRaw);
+                $data = array(
+                    "source" => $source,
+                    "title" => $title,
+                    "tags" => strtolower($tags),
+                    "raw" => strtolower($tagsRaw),
+                    "rating" => $rating
+                );
+                logTags($post["_id"], $rating, $post["tags"], $tags, $title, $source, $user["_id"], $user["username"]);
+                $db["posts"]->updateById($post["_id"], $data);
+                doLog("edit", true, $post["_id"], $user["_id"]);
+                header("Location: browse.php?page=post&id=" . $post["_id"]);
             }
+        } else {
+            doLog("edit", false, "no rating given. post: " . $post["_id"], $user["_id"]);
+            $smarty->assign("error", "No rating given!");
         }
     }
 }
