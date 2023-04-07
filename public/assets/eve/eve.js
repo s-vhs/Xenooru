@@ -107,7 +107,6 @@ function changeAttribute(elementID, attributeName, attributeValue) {
     element.setAttribute(attributeName, attributeValue);
 }
 
-
 function toggleDiv(id) {
     const div = document.getElementById(id);
     const isHidden = div.classList.contains('hidden');
@@ -115,3 +114,35 @@ function toggleDiv(id) {
     div.classList.remove(isHidden ? 'hidden' : 'block');
     div.classList.add(isHidden ? 'block' : 'hidden');
 }
+
+function checkImages() {
+    const images = document.querySelectorAll(".img2check");
+    images.forEach((img) => {
+        img.onerror = () => {
+            console.log("Error loading " + img.src);
+            changeImageSrc(img, "assets/img/missing.png");
+            removeClass(img, "h-full");
+            removeClass(img, "w-auto");
+            addClass(img, "w-full");
+            addClass(img, "h-auto");
+        };
+        img.onload = () => {
+            console.log(img.src + " loaded successfully");
+        };
+    });
+}
+
+function changeImageSrc(imgElement, newSrc) {
+    imgElement.src = newSrc;
+}
+
+function removeClass(element, className) {
+    element.classList.remove(className);
+}
+
+function addClass(element, className) {
+    element.classList.add(className);
+}
+
+checkImages();
+

@@ -266,7 +266,7 @@
                             <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
                                 <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
                                     alt="{$item.tags} score:{$item.score} rating:{$item.rating}"
-                                    class="mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-full h-auto{else}h-full w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
+                                    class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-full h-auto{else}h-full w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
 
                             </a>
                         </div>

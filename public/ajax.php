@@ -117,7 +117,7 @@ if (isset($_POST["addFavs"])) {
 }
 
 if (isset($_POST["removeFavs"])) {
-    if (!$logged) die("Not logged in!") && doLog("addFav", false, "not logged in.", null);
+    if (!$logged) die("Not logged in!") && doLog("removeFav", false, "not logged in.", null);
     if (!$userlevel["perms"]["can_manage_favourites"]) die("Missing permission!") && doLog("addFav", false, "missing permission.", $user["_id"]);
     $id = clean($_POST["removeFavs"]);
     $post = $db["posts"]->findById($id);
