@@ -210,9 +210,10 @@ function getOrder($type)
         "copyright" => 1,
         "character" => 2,
         "artist" => 3,
+        "tag" => 4
     ];
 
-    return $orderMap[$type] ?? 4;
+    return $orderMap[$type] ?? 5;
 }
 
 function processTags(int $postId, $tags)
