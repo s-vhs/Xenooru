@@ -76,6 +76,10 @@
             <p class="text-sm">
                 {$lang.phrases.help.tag_list}
             </p>
+            <p class="text-sm mt-2 font-bold">?</p>
+            <p class="text-sm">
+                {$lang.phrases.help.tag_list_question}
+            </p>
             <p class="text-sm mt-2 font-bold">+</p>
             <p class="text-sm">
                 {$lang.phrases.help.tag_list_plus}

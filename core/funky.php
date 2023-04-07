@@ -204,6 +204,11 @@ function parseTag($tag)
     return ["type" => $type, "tag" => $tag, "full" => $type . ":" . $tag];
 }
 
+function ps($path)
+{
+    return str_replace("/", DIRECTORY_SEPARATOR, $path);
+}
+
 function getOrder($type)
 {
     $orderMap = [

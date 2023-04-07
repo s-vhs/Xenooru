@@ -44,7 +44,7 @@ $config["thumbnail"]["blacklisted"] = "assets/img/nothing.png";
 // Default-Variablen
 $config["default"]["theme"] = "eve";
 $config["default"]["lang"] = "en";
-$config["default"]["level"] = 50;
+$config["default"]["level"] = 49;
 
 // X Elemente von Y pro Seite
 $config["perpage"]["users"] = 50;

@@ -74,13 +74,44 @@ function votePostDown(id) {
     });
 }
 
+function addToFavs(id) {
+    $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {
+            addFavs: id
+        },
+        success: function (text) {
+            $("#favouriteText").text(text);
+            changeAttribute("favouriteText", "onclick", "removeFromFavs(" + id + ")");
+        }
+    });
+}
+
+function removeFromFavs(id) {
+    $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {
+            removeFavs: id
+        },
+        success: function (text) {
+            $("#favouriteText").html(text);
+            changeAttribute("favouriteText", "onclick", "addToFavs(" + id + ")");
+        }
+    });
+}
+
+function changeAttribute(elementID, attributeName, attributeValue) {
+    let element = document.getElementById(elementID);
+    element.setAttribute(attributeName, attributeValue);
+}
+
+
 function toggleDiv(id) {
-    let div = document.getElementById(id);
-    if (div.classList.contains("hidden")) {
-        div.classList.remove("hidden");
-        div.classList.add("block");
-    } else {
-        div.classList.remove("block");
-        div.classList.add("hidden");
-    }
+    const div = document.getElementById(id);
+    const isHidden = div.classList.contains('hidden');
+
+    div.classList.remove(isHidden ? 'hidden' : 'block');
+    div.classList.add(isHidden ? 'block' : 'hidden');
 }

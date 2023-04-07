@@ -202,7 +202,7 @@
                 <li>{$lang.rating}: {ucfirst($post.rating)}</li>
                 <li>{$lang.score}:
                     <span id="scoreCount">{$post.score}</span>
-                    {if $logged}({$lang.vote}
+                    {if $userlevel.perms.can_vote_post}({$lang.vote}
                         <span class="text-red-500 hover:text-red-300 cursor-pointer"
                             onclick="votePostUp({$post._id})">{$lang.up}</span>/<span
                             class="text-red-500 hover:text-red-300 cursor-pointer"
@@ -213,18 +213,27 @@
             </ul>
             <p class="font-bold mt-2">{$lang.options}</p>
             <ul class="text-sm">
-                {if $logged && $user.level >= 50}
+                {if $userlevel.perms.can_edit_post && !$post.deleted}
                     <li><span class="text-red-500 hover:text-red-300 cursor-pointer"
                             onclick="toggleDiv('editDiv');">{$lang.edit}</span></li>
                 {/if}
                 <li class="font-bold"><a href="{$config.db.uploads.0}/{$post.file.database.file}" target="_blank"
                         class="text-red-500 hover:text-red-300">{$lang.original_image}</a></li>
-                {if $logged}
-                    {if $user.level == 100 || $user._id == $poster._id}
-                        <li>{$lang.delete}</li>
-                    {/if}
+                {if $userlevel.perms.can_delete_post || ($logged && $user._id == $poster._id)}
+                    <li>{$lang.delete}</li>
+                {/if}
+                {if $userlevel.perms.can_report}
                     <li>{$lang.flag_for_deletion}</li>
-                    <li>{$lang.add_to_favourites}</li>
+                {/if}
+                {if $userlevel.perms.can_manage_favourites}
+                    {if $favourited}
+                        <li id="favouriteText" class="cursor-pointer text-red-500 hover:text-red-300"
+                            onclick="removeFromFavs({$post._id})">{$lang.remove_from_favourites}
+                        </li>
+                    {else}
+                        <li id="favouriteText" class="cursor-pointer text-red-500 hover:text-red-300"
+                            onclick="addToFavs({$post._id})">{$lang.add_to_favourites}</li>
+                    {/if}
                 {/if}
             </ul>
 
@@ -255,9 +264,10 @@
                     {foreach from=$posts item=item key=key name=name}
                         <div class="mx-auto">
                             <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
-                                <img src="{$config.db.thumbs.0}/{$item.file.database.thumb}"
+                                <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
                                     alt="{$item.tags} score:{$item.score} rating:{$item.rating}"
-                                    class="max-h-[200px] {if $item.file.orientation == "landscape"}w-full h-auto{else}h-full w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
+                                    class="mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-full h-auto{else}h-full w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
+
                             </a>
                         </div>
                     {/foreach}
@@ -298,18 +308,35 @@
                 </div>
             </div>
         {else}
-            <img src="{$config.db.uploads.0}/{$post.file.database.file}" class="w-auto max-w-full">
+            {if !$post.deleted}
+                <img src="{$config.db.uploads.0}/{$post.file.database.file}" class="w-auto max-w-full">
+            {else}
+                <div class="border border-2 border-red-500 p-2">
+                    <p>
+                        <span class="text-red-500 font-bold">This post has been deleted.</span>
+                        Reason:
+                        {if !empty($post.deletedReason)}
+                            {$post.deletedReason}
+                        {else}
+                            Unknown.
+                        {/if}
+                    </p>
+                </div>
+            {/if}
 
             <h1 class="text-xl mt-2">
-                {if $logged}
+                {if $userlevel.perms.can_edit_post && !$post.deleted}
                     <span class="cursor-pointer text-red-500 hover:text-red-300"
-                        onclick="toggleDiv('editDiv');">{$lang.edit}</span> |
+                        onclick="toggleDiv('editDiv');">{$lang.edit}</span>
+                    {if $userlevel.perms.can_comment}|{/if}
                 {/if}
-                <span class="cursor-pointer text-red-500 hover:text-red-300"
-                    onclick="toggleDiv('commentDiv');">{$lang.respond}</span>
+                {if $userlevel.perms.can_comment}
+                    <span class="cursor-pointer text-red-500 hover:text-red-300"
+                        onclick="toggleDiv('commentDiv');">{$lang.respond}</span>
+                {/if}
             </h1>
 
-            {if $logged}
+            {if $userlevel.perms.can_edit_post && !$post.deleted}
                 <div id="editDiv" class="mt-2 hidden">
                     <form method="POST" name="edit" class="w-full md:w-[600px]">
 
@@ -350,7 +377,7 @@
                                     <div class="ml-2 text-sm">
                                         <label for="questionable" class="font-medium text-gray-900">Questionable (Ecchi)</label>
                                         <p class="text-xs font-normal text-gray-500">
-                                            No nudity, niples, sexual poses, etc.
+                                            No nudity, nipples to some extend okay, etc.
                                         </p>
                                     </div>
                                 </div>

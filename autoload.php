@@ -29,7 +29,9 @@ $db["logs"] = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]),
 $db["visitLogs"] = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
 $db["postVotes"] = new \SleekDB\Store("postVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
 $db["commentVotes"] = new \SleekDB\Store("commentVotes", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Kommentar-Votes
-$db["tagLogs"] = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Votes
+$db["tagLogs"] = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Logs
+$db["favourites"] = new \SleekDB\Store("favourites", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Favoriten
+$db["flagsDeletion"] = new \SleekDB\Store("flagsDeletion", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Lösch-Anfragen
 
 // Sitzungs-überprüfung
 require "core/session.php";
@@ -100,3 +102,10 @@ $smarty->assign("themes", $themes);
 
 $endtime = microtime(true);
 $smarty->assign("loadingtime", substr($endtime - $starttime, 0, -10));
+
+// Getting all plugins for the Theme
+foreach ($theme["plugins"] as $reqPlugin) {
+    if (!file_exists(ps(__DIR__ . "/library/plugins/" . $reqPlugin . ".php")))
+        die("This theme requires following plugin to be enabled: " . $reqPlugin);
+    require_once ps(__DIR__ . "/library/plugins/" . $reqPlugin . ".php");
+}

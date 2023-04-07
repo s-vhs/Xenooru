@@ -4,7 +4,7 @@
     {if $page == "post"}
         <h1 class="text-2xl">{$lang.tag_history}</h1>
         <h2 class="text-xl">{$lang.for_post} <a href="browse.php?page=post&id={$post._id}"
-                class="text-red-500 hover:text-red-300">{$lang.id}:{$post._id}</a></h2>
+                class="text-red-500 hover:text-red-300">{$lang.id}: {$post._id}</a></h2>
 
         <div class="mt-2 relative overflow-x-auto">
             <table class="w-full text-sm text-left border border-black">

@@ -1,7 +1,7 @@
 <?php
 
 require "../autoload.php";
-if (!$logged) header("Location: account.php?tab=login") && die("not logged in.");
+if (!$userlevel["perms"]["can_post"]) header("Location: account.php?tab=login") && die("no permission. try logging in.");
 
 $pages["isBrowse"] = true;
 $smarty->assign("pages", $pages);
@@ -117,6 +117,7 @@ if (isset($_POST["upload"])) {
                                             "orientation" => isLandsape($config["db"]["thumbs"][1] . "/" . $newFilename . ($fileArrayType == "video" ? ".jpeg" : $fileTypeWithDot))
                                         ),
                                         "user" => $user["_id"],
+                                        "username" => $user["username"],
                                         "status" => "active",
                                         "deleted" => false,
                                         "deletedReason" => null,
@@ -126,7 +127,7 @@ if (isset($_POST["upload"])) {
                                     if ($post) {
                                         $tags = processTags($post["_id"], clean($_POST["tags"]));
                                         $data = [
-                                            "tags" => $tags
+                                            "tags" => trim($tags)
                                         ];
                                         $db["posts"]->updateById($post["_id"], $data);
                                         logTags($post["_id"], $rating, "", $tags, $source, $title, $user["_id"], $user["username"]);

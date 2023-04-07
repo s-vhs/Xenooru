@@ -16,6 +16,16 @@ switch ($_GET["page"] ?? "browse") {
         $poster = $db["users"]->findById($post["user"]);
         $smarty->assign("post", $post);
         $smarty->assign("poster", $poster);
+        if ($logged && $userlevel["perms"]["can_manage_favourites"]) {
+            $favourited = $db["favourites"]->findOneBy([["user", "==", $user["_id"]], "AND", ["post", "==", $post["_id"]]]);
+            if (!empty($favourited))
+                $favourited = true;
+            else
+                $favourited = false;
+        } else {
+            $favourited = false;
+        }
+        $smarty->assign("favourited", $favourited);
         $title = "{$post["tags"]} score:{$post["score"]} rating:{$post["rating"]} | {$post["_id"]}";
         $page = "post";
         break;
@@ -181,7 +191,7 @@ if ($page == "browse" || $page == "search" || $page == "post") {
     /* Tag creation end */
 }
 
-if ($page == "post" && $logged && isset($_POST["edit"])) {
+if ($page == "post" && $userlevel["perms"]["can_edit_post"] && isset($_POST["edit"])) {
     $error = false;
 
     if ($config["captcha"]["enabled"] && $config["captcha"]["type"] == "hcaptcha") {
