@@ -18,10 +18,10 @@
         {/if}
     {/if}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/eve/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/eve/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/eve/favicon/favicon-16x16.png">
-    <link rel="manifest" href="assets/eve/favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/{$theme.directory}/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/{$theme.directory}/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/{$theme.directory}/favicon/favicon-16x16.png">
+    <link rel="manifest" href="assets/{$theme.directory}/favicon/site.webmanifest">
 </head>
 
 <body>

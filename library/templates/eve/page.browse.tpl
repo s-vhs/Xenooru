@@ -12,6 +12,12 @@
                 class="text-sm text-center bg-red-500 hover:bg-red-300 w-full text-white">{$lang.search}</button>
         </form>
         {if $page == "browse" || $page == "search"}
+            <p id="image-replacement-message-div"
+                class="cursor-pointer text-red-500 hover:text-red-300 hidden mt-2 text-sm">
+                <b>
+                    <span id="image-replacement-message"></span>
+                </b>
+            </p>
             <p class="font-bold mt-2">{$lang.tags}</p>
             <ul class="text-sm">
                 <!-- Copyrights Block start -->
@@ -296,7 +302,7 @@
                         <div class="mx-auto">
                             <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
                                 <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
-                                    alt="{$item.tags} score:{$item.score} rating:{$item.rating}"
+                                    alt="If you're reading this, you have JavaScript disabled"
                                     class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-full h-auto{else}h-full w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
 
                             </a>

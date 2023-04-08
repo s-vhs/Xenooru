@@ -14,7 +14,7 @@ function getCursorPosition(inputField) {
     } else if (document.selection) {
         inputField.focus();
         let range = document.selection.createRange();
-        range.moveStart('character', -inputField.value.length);
+        range.moveStart("character", -inputField.value.length);
         return range.text.length;
     }
     return 0;
@@ -27,193 +27,108 @@ function deleteCharactersBeforePosition(inputField, position, numberOfCharacters
     inputField.setSelectionRange(position - numberOfCharacters, position - numberOfCharacters);
 }
 
-
-function doSearch(search = "search", display = "display") {
-    let name = $("#" + search).val();
-    $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {
-            search: name,
-            item: search,
-            display: display
-        },
-        success: function (html) {
-            $("#" + display).html(html).show();
-        }
-    });
-}
-
-function votePostUp(id) {
-    $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {
-            voteUp: id
-        },
-        success: function (json) {
-            let text = JSON.parse(json);
-            $("#voteDiv").html(text[0]).show();
-            $("#scoreCount").html(text[1]);
-        }
-    });
-}
-
-function votePostDown(id) {
-    $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {
-            voteDown: id
-        },
-        success: function (json) {
-            let text = JSON.parse(json);
-            $("#voteDiv").html(text[0]).show();
-            $("#scoreCount").html(text[1]);
-        }
-    });
-}
-
-function addToFavs(id) {
-    $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {
-            addFavs: id
-        },
-        success: function (text) {
-            $("#favouriteText").text(text);
-            changeAttribute("favouriteText", "onclick", "removeFromFavs(" + id + ")");
-        }
-    });
-}
-
-function removeFromFavs(id) {
-    $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {
-            removeFavs: id
-        },
-        success: function (text) {
-            $("#favouriteText").html(text);
-            changeAttribute("favouriteText", "onclick", "addToFavs(" + id + ")");
-        }
-    });
-}
-
-function changeAttribute(elementID, attributeName, attributeValue) {
-    let element = document.getElementById(elementID);
-    element.setAttribute(attributeName, attributeValue);
-}
-
-function toggleDiv(id) {
-    const div = document.getElementById(id);
-    const isHidden = div.classList.contains('hidden');
-
-    div.classList.remove(isHidden ? 'hidden' : 'block');
-    div.classList.add(isHidden ? 'block' : 'hidden');
-}
-
 function checkImages() {
     const images = document.querySelectorAll(".img2check");
+    let count = 0;
+
     images.forEach((img) => {
-        img.onerror = () => {
-            console.log("Error loading " + img.src);
-            changeImageSrc(img, "assets/img/missing.png");
-            removeClass(img, "h-full");
-            removeClass(img, "w-auto");
-            addClass(img, "w-full");
-            addClass(img, "h-auto");
-        };
         img.onload = () => {
-            console.log(img.src + " loaded successfully");
+            if (!img.complete || img.naturalHeight === 0) {
+                console.log("Error loading " + img.src);
+                changeImageSrc(img, "assets/img/missing.png");
+                removeClass(img, "h-full");
+                removeClass(img, "w-auto");
+                addClass(img, "w-full");
+                addClass(img, "h-auto");
+            } else {
+                console.log(img.src + " loaded successfully");
+            }
         };
+    });
+
+    const safeOnly = getCookieValue("safeOnly");
+    const filter = (safeOnly == 1) ? "both" : "none";
+
+    images.forEach((img) => {
+        let parent = img.parentNode;
+        switch (filter) {
+            case "questionable":
+                if (
+                    parent.tagName === "A" &&
+                    parent.getAttribute("title").includes("rating:questionable")
+                ) {
+                    img.setAttribute("formerSrc", img.src);
+                    img.src = "assets/img/hidden.png";
+                    count++;
+                }
+                break;
+            case "explicit":
+                if (
+                    parent.tagName === "A" &&
+                    parent.getAttribute("title").includes("rating:explicit")
+                ) {
+                    img.setAttribute("formerSrc", img.src);
+                    img.src = "assets/img/hidden.png";
+                    count++;
+                }
+                break;
+            case "both":
+                if (
+                    parent.tagName === "A" &&
+                    (parent.getAttribute("title").includes("rating:explicit") ||
+                        parent.getAttribute("title").includes("rating:questionable"))
+                ) {
+                    img.setAttribute("formerSrc", img.src);
+                    img.src = "assets/img/hidden.png";
+                    count++;
+                }
+                break;
+            default:
+                break;
+        }
+    });
+
+
+    if (count > 0) {
+        let div = document.getElementById("image-replacement-message-div");
+        removeClass(div, "hidden");
+        let element = document.getElementById("image-replacement-message");
+        element.style.display = "block";
+        let posts = count === 1 ? "post" : "posts";
+        element.textContent = "Show " + count + " " + posts + ".";
+        element.setAttribute("main", "Show " + count + " " + posts + ".");
+        element.setAttribute("alt", "Hide " + count + " " + posts + ".");
+        element.onclick = showImages;
+    }
+}
+
+
+function showImages() {
+    const images = document.querySelectorAll(".img2check");
+    let element = document.getElementById("image-replacement-message");
+    toggleText("image-replacement-message", element.getAttribute("main"), element.getAttribute("alt"));
+
+    images.forEach((img) => {
+        if (img.hasAttribute("formerSrc")) {
+            const formerSrc = img.getAttribute("formerSrc");
+            img.setAttribute("store", img.src);
+            img.setAttribute("src", formerSrc);
+            img.setAttribute("formerSrc", img.getAttribute("store"));
+            img.removeAttribute("store");
+        }
     });
 }
 
-function flagForDeletion(postId) {
-    const input = prompt("Why should this post be deleted?");
+function toggleText(id, text1, text2) {
+    const element = document.getElementById(id);
+    const currentText = element.textContent;
 
-    if (input) {
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {
-                deletionFlag: postId,
-                reason: input
-            },
-            success: function (response) {
-                if (response == "flagged") {
-                    alert("Success!");
-                    let deletion = document.getElementById("deletionFlag");
-                    addClass(deletion, "hidden");
-                } else {
-                    alert(response);
-                }
-            },
-            error: function () {
-                alert("Error!");
-            }
-        });
+    if (currentText === text1) {
+        element.textContent = text2;
     } else {
-        alert("Canceled!");
+        element.textContent = text1;
     }
 }
-
-function deletePost(postId) {
-    const input = prompt("Why are you deleting this post?");
-
-    if (input) {
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {
-                deletePost: postId,
-                reason: input
-            },
-            success: function (response) {
-                if (response == "deleted") {
-                    alert("Success!");
-                    location.reload();
-                } else {
-                    alert(response);
-                }
-            },
-            error: function () {
-                alert("Error!");
-            }
-        });
-    } else {
-        alert("Canceled!");
-    }
-}
-
-function recoverPost(postId) {
-    if (confirm("Are you sure you want to recover this post?")) {
-        $.ajax({
-            type: "POST",
-            url: "ajax.php",
-            data: {
-                recoverPost: postId
-            },
-            success: function (response) {
-                if (response == "recovered") {
-                    alert("Success!");
-                    location.reload();
-                } else {
-                    alert(response);
-                }
-            },
-            error: function () {
-                alert("Error!");
-            }
-        });
-    } else {
-        alert("Canceled!");
-    }
-}
-
 
 function changeImageSrc(imgElement, newSrc) {
     imgElement.src = newSrc;
@@ -227,4 +142,44 @@ function addClass(element, className) {
     element.classList.add(className);
 }
 
-checkImages();
+function changeAttribute(elementID, attributeName, attributeValue) {
+    let element = document.getElementById(elementID);
+    element.setAttribute(attributeName, attributeValue);
+}
+
+function toggleDiv(id) {
+    const div = document.getElementById(id);
+    const isHidden = div.classList.contains("hidden");
+
+    div.classList.remove(isHidden ? "hidden" : "block");
+    div.classList.add(isHidden ? "block" : "hidden");
+}
+
+function getCookie(name) {
+    // Split cookie string and get all individual name=value pairs in an array
+    let cookieArr = document.cookie.split(";");
+
+    // Loop through the array elements
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookiePair = cookieArr[i].split("=");
+
+        /* Removing whitespace at the beginning of the cookie name
+           and compare it with the given string */
+        if (name == cookiePair[0].trim()) {
+            // Decode the cookie value and return
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+
+    // Return null if cookie not found
+    return null;
+}
+
+function getCookieValue(cookieName) {
+    const cookieValue = document.cookie.match('(^|[^;]+)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
+    return cookieValue ? cookieValue.pop() : '';
+}
+
+/* Now perform all actions that should be performed */
+
+checkImages("both");
