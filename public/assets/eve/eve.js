@@ -133,7 +133,7 @@ function checkImages() {
 }
 
 function flagForDeletion(postId) {
-    const input = prompt("Please enter your data:");
+    const input = prompt("Why should this post be deleted?");
 
     if (input) {
         $.ajax({
@@ -148,6 +148,59 @@ function flagForDeletion(postId) {
                     alert("Success!");
                     let deletion = document.getElementById("deletionFlag");
                     addClass(deletion, "hidden");
+                } else {
+                    alert(response);
+                }
+            },
+            error: function () {
+                alert("Error!");
+            }
+        });
+    } else {
+        alert("Canceled!");
+    }
+}
+
+function deletePost(postId) {
+    const input = prompt("Why are you deleting this post?");
+
+    if (input) {
+        $.ajax({
+            type: "POST",
+            url: "ajax.php",
+            data: {
+                deletePost: postId,
+                reason: input
+            },
+            success: function (response) {
+                if (response == "deleted") {
+                    alert("Success!");
+                    location.reload();
+                } else {
+                    alert(response);
+                }
+            },
+            error: function () {
+                alert("Error!");
+            }
+        });
+    } else {
+        alert("Canceled!");
+    }
+}
+
+function recoverPost(postId) {
+    if (confirm("Are you sure you want to recover this post?")) {
+        $.ajax({
+            type: "POST",
+            url: "ajax.php",
+            data: {
+                recoverPost: postId
+            },
+            success: function (response) {
+                if (response == "recovered") {
+                    alert("Success!");
+                    location.reload();
                 } else {
                     alert(response);
                 }

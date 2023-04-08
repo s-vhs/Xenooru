@@ -224,9 +224,15 @@
                         class="text-red-500 hover:text-red-300">{$lang.original_image}</a></li>
                 {if $userlevel.perms.can_delete_post || ($logged && $user._id == $poster._id)}
                     {if !$post.deleted}
-                        <li>{$lang.delete}</li>
+                        <li>
+                            <a onclick="deletePost({$post._id});"
+                                class="cursor-pointer text-red-500 hover:text-red-300">{$lang.delete}</a>
+                        </li>
                     {elseif $post.deleted && $userlevel.perms.can_delete_post}
-                        <li>{$lang.recover}</li>
+                        <li>
+                            <a onclick="recoverPost({$post._id});"
+                                class="cursor-pointer text-red-500 hover:text-red-300">{$lang.recover}</a>
+                        </li>
                     {/if}
                 {/if}
                 {if $userlevel.perms.can_report && !$hasFlaggedForDeletion}
@@ -242,17 +248,11 @@
                         {$deletionFlagRejectionReason}</li>
                 {/if}
                 {if $userlevel.perms.can_manage_favourites}
-                    {if $favourited}
-                        <li id="favouriteText">
-                            <a class="cursor-pointer text-red-500 hover:text-red-300"
-                                onclick="removeFromFavs({$post._id})">{$lang.remove_from_favourites}</a>
-                        </li>
-                    {else}
-                        <li id="favouriteText">
-                            <a class="cursor-pointer text-red-500 hover:text-red-300"
-                                onclick="addToFavs({$post._id})">{$lang.add_to_favourites}</a>
-                        </li>
-                    {/if}
+                    <li>
+                        <a class="cursor-pointer text-red-500 hover:text-red-300" onclick="{if $favourited}removeFromFavs({$post._id});
+                            {else}addToFavs({$post._id});{/if}"
+                            id="favouriteText">{if $favourited}{$lang.remove_from_favourites}{else}{$lang.add_to_favourites}{/if}</a>
+                    </li>
                 {/if}
             </ul>
             <!-- Options Block end -->

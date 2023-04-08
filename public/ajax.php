@@ -138,7 +138,7 @@ if (isset($_POST["deletionFlag"])) {
     if (empty($_POST["reason"])) die("Missing reason!") && doLog("flagPost", false, "missing reason.", $user["_id"]);
     $id = clean($_POST["deletionFlag"]);
     $post = $db["posts"]->findById($id);
-    if (empty($post)) die() && doLog("removeFav", false, "post not found.", $user["_id"]);
+    if (empty($post)) die() && doLog("flagPost", false, "post not found.", $user["_id"]);
     $reason = clean($_POST["reason"]);
 
     if (empty($db["flagsDeletion"]->findOneBy([["user", "==", $user["_id"]], "AND", ["post", "==", $id]]))) {
@@ -152,10 +152,57 @@ if (isset($_POST["deletionFlag"])) {
             "processedBy" => null,
             "timestamp" => now()
         ];
-        $db["flagsDeletion"]->insert($data);
+        $flag = $db["flagsDeletion"]->insert($data);
+        doLog("flagPost", true, $flag["_id"], $user["_id"]);
         die("flagged");
     } else {
         doLog("flagPost", false, "arleady flagged: " . $id, $user["_id"]);
         die("Already flagged!");
+    }
+}
+
+if (isset($_POST["deletePost"])) {
+    if (!$logged) die("Not logged in!") && doLog("deletePost", false, "not logged in.", null);
+    if (!$userlevel["perms"]["can_delete_post"]) die("Missing permission!") && doLog("deletePost", false, "missing permission.", $user["_id"]);
+    if (!is_numeric($_POST["deletePost"])) die("Invalid post ID!") && doLog("deletePost", false, "invalid post id: " . $_POST["deletePost"], $user["_id"]);
+    if (empty($_POST["reason"])) die("Missing reason!") && doLog("deletePost", false, "missing reason.", $user["_id"]);
+    $id = clean($_POST["deletePost"]);
+    $post = $db["posts"]->findById($id);
+    if (empty($post)) die() && doLog("deletePost", false, "post not found.", $user["_id"]);
+    $reason = clean($_POST["reason"]);
+
+    if (!$post["deleted"]) {
+        $data = [
+            "deleted" => true,
+            "deletedReason" => $reason
+        ];
+        $delete = $db["posts"]->updateById($id, $data);
+        doLog("deletePost", true, $delete["_id"], $user["_id"]);
+        die("deleted");
+    } else {
+        doLog("deletePost", false, "arleady deleted: " . $id, $user["_id"]);
+        die("Already deleted!");
+    }
+}
+
+if (isset($_POST["recoverPost"])) {
+    if (!$logged) die("Not logged in!") && doLog("recoverPost", false, "not logged in.", null);
+    if (!$userlevel["perms"]["can_delete_post"]) die("Missing permission!") && doLog("recoverPost", false, "missing permission.", $user["_id"]);
+    if (!is_numeric($_POST["recoverPost"])) die("Invalid post ID!") && doLog("recoverPost", false, "invalid post id: " . $_POST["recoverPost"], $user["_id"]);
+    $id = clean($_POST["recoverPost"]);
+    $post = $db["posts"]->findById($id);
+    if (empty($post)) die() && doLog("deletePost", false, "post not found.", $user["_id"]);
+
+    if ($post["deleted"]) {
+        $data = [
+            "deleted" => false,
+            "deletedReason" => null
+        ];
+        $delete = $db["posts"]->updateById($id, $data);
+        doLog("recoverPost", true, $delete["_id"], $user["_id"]);
+        die("recovered");
+    } else {
+        doLog("recoverPost", false, "arleady recovered: " . $id, $user["_id"]);
+        die("Already recovered!");
     }
 }
