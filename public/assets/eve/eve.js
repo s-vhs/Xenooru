@@ -47,6 +47,7 @@ function checkImages() {
 
     const safeOnly = getCookieValue("safeOnly");
     const filter = (safeOnly == 1) ? "both" : "none";
+    const blacklist = stringToArray(getCookieValue("blacklist"));
 
     // Leaves space for an option for only one of these both two?
     images.forEach((img) => {
@@ -85,6 +86,11 @@ function checkImages() {
                 break;
             default:
                 break;
+        }
+        if (stringContainsWord(parent.getAttribute("title"), blacklist) && img.getAttribute("src") !== "assets/img/hidden.png") {
+            img.setAttribute("formerSrc", img.src);
+            img.src = "assets/img/hidden.png";
+            count++;
         }
     });
 
@@ -135,6 +141,10 @@ function showImages() {
     });
 }
 
+function decodeString(encodedString) {
+    return decodeURIComponent(encodedString);
+}
+
 function toggleText(id, text1, text2) {
     const element = document.getElementById(id);
     const currentText = element.textContent;
@@ -144,6 +154,22 @@ function toggleText(id, text1, text2) {
     } else {
         element.textContent = text1;
     }
+}
+
+function stringContainsWord(str, words) {
+    if (!Array.isArray(words)) {
+        words = [words];
+    }
+
+    for (let i = 0; i < words.length; i++) {
+        const word = decodeString(words[i]);
+        const regex = new RegExp(`\\b${word}\\b`, 'i');
+        if (regex.test(str)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function changeImageSrc(imgElement, newSrc) {
@@ -161,6 +187,10 @@ function addClass(element, className) {
 function changeAttribute(elementID, attributeName, attributeValue) {
     let element = document.getElementById(elementID);
     element.setAttribute(attributeName, attributeValue);
+}
+
+function stringToArray(str) {
+    return str.split(' ');
 }
 
 function toggleDiv(id) {
