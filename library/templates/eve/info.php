@@ -7,6 +7,7 @@ $theme = array(
     "website" => "https://h33t.moe",
     "plugins" => [
         "levelSystem",
-        "getUserLevel"
+        "getUserLevel",
+        "deletionFlag"
     ]
 );

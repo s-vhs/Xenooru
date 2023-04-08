@@ -132,6 +132,36 @@ function checkImages() {
     });
 }
 
+function flagForDeletion(postId) {
+    const input = prompt("Please enter your data:");
+
+    if (input) {
+        $.ajax({
+            type: "POST",
+            url: "ajax.php",
+            data: {
+                deletionFlag: postId,
+                reason: input
+            },
+            success: function (response) {
+                if (response == "flagged") {
+                    alert("Success!");
+                    let deletion = document.getElementById("deletionFlag");
+                    addClass(deletion, "hidden");
+                } else {
+                    alert(response);
+                }
+            },
+            error: function () {
+                alert("Error!");
+            }
+        });
+    } else {
+        alert("Canceled!");
+    }
+}
+
+
 function changeImageSrc(imgElement, newSrc) {
     imgElement.src = newSrc;
 }
@@ -145,4 +175,3 @@ function addClass(element, className) {
 }
 
 checkImages();
-

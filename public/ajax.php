@@ -130,3 +130,32 @@ if (isset($_POST["removeFavs"])) {
         die($lang["post_already_removed_from_your_favorites"]);
     }
 }
+
+if (isset($_POST["deletionFlag"])) {
+    if (!$logged) die("Not logged in!") && doLog("flagPost", false, "not logged in.", null);
+    if (!$userlevel["perms"]["can_report"]) die("Missing permission!") && doLog("flagPost", false, "missing permission.", $user["_id"]);
+    if (!is_numeric($_POST["deletionFlag"])) die("Invalid post ID!") && doLog("flagPost", false, "invalid post id: " . $_POST["deletionFlag"], $user["_id"]);
+    if (empty($_POST["reason"])) die("Missing reason!") && doLog("flagPost", false, "missing reason.", $user["_id"]);
+    $id = clean($_POST["deletionFlag"]);
+    $post = $db["posts"]->findById($id);
+    if (empty($post)) die() && doLog("removeFav", false, "post not found.", $user["_id"]);
+    $reason = clean($_POST["reason"]);
+
+    if (empty($db["flagsDeletion"]->findOneBy([["user", "==", $user["_id"]], "AND", ["post", "==", $id]]))) {
+        $data = [
+            "post" => $id,
+            "user" => $user["_id"],
+            "username" => $user["username"],
+            "status" => 0,
+            "reason" => $reason,
+            "rejectedReason" => null,
+            "processedBy" => null,
+            "timestamp" => now()
+        ];
+        $db["flagsDeletion"]->insert($data);
+        die("flagged");
+    } else {
+        doLog("flagPost", false, "arleady flagged: " . $id, $user["_id"]);
+        die("Already flagged!");
+    }
+}

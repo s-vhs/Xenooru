@@ -187,6 +187,7 @@
                 {/if}
                 <!-- Metas block end -->
             </ul>
+            <!-- Statistics Block start -->
             <p class="font-bold mt-2">{$lang.statistics}</p>
             <ul class="text-sm">
                 <li>{$lang.id}: {$post._id}</li>
@@ -211,6 +212,8 @@
                 </li>
                 <li id="voteDiv" class="italic text-red-500"></li>
             </ul>
+            <!-- Statistics Block end -->
+            <!-- Options Block start -->
             <p class="font-bold mt-2">{$lang.options}</p>
             <ul class="text-sm">
                 {if $userlevel.perms.can_edit_post && !$post.deleted}
@@ -220,38 +223,66 @@
                 <li class="font-bold"><a href="{$config.db.uploads.0}/{$post.file.database.file}" target="_blank"
                         class="text-red-500 hover:text-red-300">{$lang.original_image}</a></li>
                 {if $userlevel.perms.can_delete_post || ($logged && $user._id == $poster._id)}
-                    <li>{$lang.delete}</li>
+                    {if !$post.deleted}
+                        <li>{$lang.delete}</li>
+                    {elseif $post.deleted && $userlevel.perms.can_delete_post}
+                        <li>{$lang.recover}</li>
+                    {/if}
                 {/if}
-                {if $userlevel.perms.can_report}
-                    <li>{$lang.flag_for_deletion}</li>
+                {if $userlevel.perms.can_report && !$hasFlaggedForDeletion}
+                    {if !$post.deleted}
+                        <li id="deletionFlag">
+                            <a class="cursor-pointer text-red-500 hover:text-red-300" onclick="flagForDeletion({$post._id});">
+                                {$lang.flag_for_deletion}
+                            </a>
+                        </li>
+                    {/if}
+                {elseif $hasFlaggedForDeletion && isset($deletionFlagRejectionReason) && !empty($deletionFlagRejectionReason)}
+                    <li class="text-italic">{$lang.your_report_has_been_rejected}. {$lang.reason}:
+                        {$deletionFlagRejectionReason}</li>
                 {/if}
                 {if $userlevel.perms.can_manage_favourites}
                     {if $favourited}
-                        <li id="favouriteText" class="cursor-pointer text-red-500 hover:text-red-300"
-                            onclick="removeFromFavs({$post._id})">{$lang.remove_from_favourites}
+                        <li id="favouriteText">
+                            <a class="cursor-pointer text-red-500 hover:text-red-300"
+                                onclick="removeFromFavs({$post._id})">{$lang.remove_from_favourites}</a>
                         </li>
                     {else}
-                        <li id="favouriteText" class="cursor-pointer text-red-500 hover:text-red-300"
-                            onclick="addToFavs({$post._id})">{$lang.add_to_favourites}</li>
+                        <li id="favouriteText">
+                            <a class="cursor-pointer text-red-500 hover:text-red-300"
+                                onclick="addToFavs({$post._id})">{$lang.add_to_favourites}</a>
+                        </li>
                     {/if}
                 {/if}
             </ul>
+            <!-- Options Block end -->
 
+            <!-- History Block start -->
             <p class="font-bold mt-2">{$lang.history}</p>
             <ul class="text-sm">
-                <li><a href="logs.php?page=post&id={$post._id}" class="text-red-500 hover:text-red-300">{$lang.tags}</a>
+                <li>
+                    <a href="logs.php?page=post&id={$post._id}" class="text-red-500 hover:text-red-300">{$lang.tags}</a>
                 </li>
             </ul>
+            <!-- History Block end -->
 
+            <!-- Related Posts Block start -->
             <p class="font-bold mt-2">{$lang.related_posts}</p>
             <ul class="text-sm">
-                <li><a href="https://saucenao.com/search.php?url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
-                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.saucenao}</a></li>
-                <li><a href="https://iqdb.org/?url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
-                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.iqdb}</a></li>
-                <li><a href="https://waifu2x.booru.pics/Home/fromlink?denoise=1&scale=2&url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
-                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.waifu2x}</a></li>
+                <li>
+                    <a href="https://saucenao.com/search.php?url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
+                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.saucenao}</a>
+                </li>
+                <li>
+                    <a href="https://iqdb.org/?url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
+                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.iqdb}</a>
+                </li>
+                <li>
+                    <a href="https://waifu2x.booru.pics/Home/fromlink?denoise=1&scale=2&url={$url}{$config.db.uploads.0}/{$post.file.database.file}"
+                        class="text-red-500 hover:text-red-300" target="_blank">{$lang.waifu2x}</a>
+                </li>
             </ul>
+            <!-- Related Posts Block end -->
         {/if}
         <!-- Chibi start -->
         <img src="assets/{$theme.directory}/{$config.chibi}" class="mt-2 w-full" alt="Chibi!">

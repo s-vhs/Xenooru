@@ -104,6 +104,7 @@ $lang = array(
     "edit" => "Edit",
     "original_image" => "Original image",
     "delete" => "Delete",
+    "recover" => "Recover",
     "flag_for_deletion" => "Flag for deletion",
     "add_to_favourites" => "Add to favourites",
     "remove_from_favourites" => "Remove from favourites",
@@ -124,6 +125,8 @@ $lang = array(
     "date" => "Date",
     "user" => "User",
     "none" => "None",
+    "your_report_has_been_rejected" => "Your Report has been rejected",
+    "reason" => "Reason",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",
