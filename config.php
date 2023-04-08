@@ -54,17 +54,17 @@ $config["perpage"]["announcements"] = 50;
 $config["perpage"]["tags"] = 100;
 
 // Diese Software nutzt Smarty als Template-Engine. Dokumentation: https://smarty-php.github.io/smarty/
-$config["smarty"]["template"] = __DIR__ . "/../library/templates/"; // Dies muss mit einen Schrägstriche enden!
-$config["smarty"]["config"] = __DIR__ . "/../library/smarty/config";
-$config["smarty"]["compile"] = __DIR__ . "/../library/smarty/compile";
-$config["smarty"]["cache"] = __DIR__ . "/../library/smarty/cache";
+$config["smarty"]["template"] = __DIR__ . "/library/templates/"; // Dies muss mit einen Schrägstriche enden!
+$config["smarty"]["config"] = __DIR__ . "/library/smarty/config";
+$config["smarty"]["compile"] = __DIR__ . "/library/smarty/compile";
+$config["smarty"]["cache"] = __DIR__ . "/library/smarty/cache";
 
 // Diese Software nutzt SleekDB als Datenbank. Dokumentation: https://sleekdb.github.io/
 $config["db"]["thumbs"][0] = "community/thumbs"; // in /public/
-$config["db"]["thumbs"][1] = __DIR__ . "/../public/community/thumbs";
+$config["db"]["thumbs"][1] = __DIR__ . "/public/community/thumbs";
 $config["db"]["uploads"][0] = "community/uploads"; // in /public/
-$config["db"]["uploads"][1] = __DIR__ . "/../public/community/uploads";
-$config["db"]["path"] = __DIR__ . "/../database";
+$config["db"]["uploads"][1] = __DIR__ . "/public/community/uploads";
+$config["db"]["path"] = __DIR__ . "/database";
 $config["db"]["config"] = array(
     "auto_cache" => true,
     "cache_lifetime" => null,

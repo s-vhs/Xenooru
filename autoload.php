@@ -4,9 +4,9 @@
 $starttime = microtime(true);
 
 // Erst nehmen wir alles wichtige
-require "core/config.php";
+require "config.php";
 $config["debug"] == true ? error_reporting(E_ALL) && ini_set('display_errors', 1) : error_reporting(0) && ini_set('display_errors', 0);
-require_once "core/funky.php";
+require_once "funky.php";
 
 // Nun initialisieren wir die Datenbank. Später erstellen wir die einzelnen Elemente
 require_once "library/SleekDB/Store.php";
@@ -34,7 +34,7 @@ $db["favourites"] = new \SleekDB\Store("favourites", platformSlashes($config["db
 $db["flagsDeletion"] = new \SleekDB\Store("flagsDeletion", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Lösch-Anfragen
 
 // Sitzungs-überprüfung
-require "core/session.php";
+require "session.php";
 $usertheme = $logged ? $user["theme"] : $_COOKIE["theme"] ?? $config["default"]["theme"];
 $userlang = $logged ? $user["lang"] : $_COOKIE["lang"] ?? $config["default"]["lang"];
 require file_exists("library/templates/{$usertheme}/info.php") ? "library/templates/{$usertheme}/info.php" : "library/templates/{$config["default"]["theme"]}/info.php";

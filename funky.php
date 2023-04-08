@@ -33,7 +33,7 @@ function doLog($action, bool $success, $value = null, $user = null)
 {
     require "config.php";
     if ($config["logs"]) {
-        require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+        require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
         $db = new \SleekDB\Store("logs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Logs
         if (empty($action)) return false;
         if (!empty($user) && !is_numeric($user)) return false;
@@ -53,7 +53,7 @@ function doLog($action, bool $success, $value = null, $user = null)
 function logTags(int $post, string $rating, string $before, string $after, string $source, string $title, int $user, string $username)
 {
     require "config.php";
-    require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
     $db = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Logs
     if (empty($post) || !is_numeric($post)) return false;
     if (empty($after)) return false;
@@ -78,7 +78,7 @@ function logTags(int $post, string $rating, string $before, string $after, strin
 function visit()
 {
     require "config.php";
-    require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
     $db = new \SleekDB\Store("visitLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Besucher-Logs
     if (empty($db->findOneBy(["ip", "==", clean($_SERVER["REMOTE_ADDR"])]))) {
         $data = array(
@@ -225,7 +225,7 @@ function processTags(int $postId, $tags)
 {
     if (!is_array($tags)) $tags = toArrayFromSpaces($tags);
     require "config.php";
-    require_once platformSlashes(__DIR__ . "/../library/SleekDB/Store.php");
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
     $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
     $db["tagRelations"] = new \SleekDB\Store("tagRelations", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags-Verknüpfungen
     // $post = $db["tags"]->findById($postId);
