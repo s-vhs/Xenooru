@@ -87,10 +87,12 @@ function checkImages() {
             default:
                 break;
         }
-        if (stringContainsWord(parent.getAttribute("title"), blacklist) && img.getAttribute("src") !== "assets/img/hidden.png") {
-            img.setAttribute("formerSrc", img.src);
-            img.src = "assets/img/hidden.png";
-            count++;
+        if (!isArrayEmpty(blacklist)) {
+            if (stringContainsWord(parent.getAttribute("title"), decodeString(blacklist)) && img.getAttribute("src") !== "assets/img/hidden.png") {
+                img.setAttribute("formerSrc", img.src);
+                img.src = "assets/img/hidden.png";
+                count++;
+            }
         }
     });
 
@@ -172,6 +174,10 @@ function stringContainsWord(str, words) {
     return false;
 }
 
+function isArrayEmpty(arr) {
+    return arr.length === 0;
+}
+
 function changeImageSrc(imgElement, newSrc) {
     imgElement.src = newSrc;
 }
@@ -190,7 +196,11 @@ function changeAttribute(elementID, attributeName, attributeValue) {
 }
 
 function stringToArray(str) {
-    return str.split(' ');
+    if (!isArrayEmpty(str)) {
+        return str.split(' ');
+    } else {
+        return [];
+    }
 }
 
 function toggleDiv(id) {
