@@ -37,8 +37,8 @@ $config["upload"]["min"] = 5; // Min amount of tags on new/existing post
 
 // Thumbnails
 $config["thumbnail"]["enabled"] = true; // Requires Imagick, generation will keep aspect ratio!
-$config["thumbnail"]["width"] = "300"; // Pixel, max-width for generation
-$config["thumbnail"]["height"] = "200"; // Pixel, max-height for generation
+$config["thumbnail"]["width"] = "350"; // Pixel, max-width for generation
+$config["thumbnail"]["height"] = "250"; // Pixel, max-height for generation
 $config["thumbnail"]["blacklisted"] = "assets/img/nothing.png";
 
 // Default-Variablen

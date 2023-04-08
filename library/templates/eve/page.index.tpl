@@ -27,9 +27,9 @@
             {$version}</a> |
         {$lang.total_unique_visits}: {$totalvisits}
     </p>
-    <div class="mt-1">
+    <div class="mt-1 flex justify-center">
         {foreach from=$totalposts item=item key=id}
-            <img src="assets/counter/{$item}.gif" class="mx-auto animate__animated animate__zoomIn">
+            <img src="assets/counter/{$item}.gif" class="animate__animated animate__zoomIn">
         {/foreach}
     </div>
 </div>
