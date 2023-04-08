@@ -32,23 +32,23 @@ function checkImages() {
     let count = 0;
 
     images.forEach((img) => {
+        img.onerror = () => {
+            console.log("Error loading " + img.src);
+            changeImageSrc(img, "assets/img/missing.png");
+            removeClass(img, "h-full");
+            removeClass(img, "w-auto");
+            addClass(img, "w-full");
+            addClass(img, "h-auto");
+        };
         img.onload = () => {
-            if (!img.complete || img.naturalHeight === 0) {
-                console.log("Error loading " + img.src);
-                changeImageSrc(img, "assets/img/missing.png");
-                removeClass(img, "h-full");
-                removeClass(img, "w-auto");
-                addClass(img, "w-full");
-                addClass(img, "h-auto");
-            } else {
-                console.log(img.src + " loaded successfully");
-            }
+            console.log(img.src + " loaded successfully");
         };
     });
 
     const safeOnly = getCookieValue("safeOnly");
     const filter = (safeOnly == 1) ? "both" : "none";
 
+    // Leaves space for an option for only one of these both two?
     images.forEach((img) => {
         let parent = img.parentNode;
         switch (filter) {
@@ -88,6 +88,7 @@ function checkImages() {
         }
     });
 
+    modifyHiddenImages();
 
     if (count > 0) {
         let div = document.getElementById("image-replacement-message-div");
@@ -102,6 +103,17 @@ function checkImages() {
     }
 }
 
+function modifyHiddenImages() {
+    const hiddenImages = document.querySelectorAll('img[src="assets/img/hidden.png"]');
+
+    hiddenImages.forEach(img => {
+        if (img.classList.contains("h-full") && img.classList.contains("w-auto")) {
+            // img.setAttribute("altClass", img.classList.value);
+            img.classList.remove("h-full", "w-auto");
+            img.classList.add("w-full");
+        }
+    });
+}
 
 function showImages() {
     const images = document.querySelectorAll(".img2check");
@@ -115,6 +127,10 @@ function showImages() {
             img.setAttribute("src", formerSrc);
             img.setAttribute("formerSrc", img.getAttribute("store"));
             img.removeAttribute("store");
+
+            // if (img.hasAttribute("altClass")) {
+            //     img.setAttribute("class", img.getAttribute("altClass"));
+            // }
         }
     });
 }
@@ -182,4 +198,4 @@ function getCookieValue(cookieName) {
 
 /* Now perform all actions that should be performed */
 
-checkImages("both");
+checkImages();
