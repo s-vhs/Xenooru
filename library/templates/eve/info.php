@@ -8,6 +8,7 @@ $theme = array(
     "plugins" => [
         "levelSystem",
         "getUserLevel",
-        "deletionFlag"
+        "deletionFlag",
+        "userCookies"
     ]
 );
