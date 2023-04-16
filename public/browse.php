@@ -244,6 +244,14 @@ if ($page == "post" && $userlevel["perms"]["can_edit_post"] && isset($_POST["edi
     }
 }
 
+if ($page == "post" && $userlevel["perms"]["can_comment"] && isset($_POST["comment"])) {
+    $error = false;
+    if (empty($_POST["commentPost"])) {
+        $error = true;
+        $smarty->assign("error", "Comment is empty!");
+    }
+}
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.browse.tpl");
 $smarty->display("part.bottom.tpl");

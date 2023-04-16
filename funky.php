@@ -11,12 +11,12 @@ function clean($data)
 
 function stripNumbers($input)
 {
-    return preg_replace('/[^0-9]/', '', json_encode($input));
+    return preg_replace("/[^0-9]/", "", json_encode($input));
 }
 
 function platformSlashes($path)
 {
-    return str_replace('/', DIRECTORY_SEPARATOR, $path);
+    return str_replace("/", DIRECTORY_SEPARATOR, $path);
 }
 
 function genToken()
@@ -108,14 +108,14 @@ function hCaptcha($response)
 function formatBytes($size, $precision = 2)
 {
     $base = log($size, 1024);
-    $suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
+    $suffixes = array("B", "KB", "MB", "GB", "TB");
     return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 }
 
 function genUuid()
 {
     return sprintf(
-        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        "%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff),
         mt_rand(0, 0xffff),
@@ -151,7 +151,7 @@ function toArrayFromSpaces(string $string): array
     if (empty($trimmedString)) {
         return [];
     }
-    $items = explode(' ', $trimmedString);
+    $items = explode(" ", $trimmedString);
     $result = [];
     foreach ($items as $item) {
         $result[] = substr(strtolower(clean(trim($item))), 0, 75);
@@ -286,4 +286,39 @@ function isLandsape($file)
 {
     list($width, $height) = getimagesize($file);
     return $width > $height ? "landscape" : "portrait";
+}
+
+function encryptString($message, $key)
+{
+    $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+    $salt = random_bytes(SODIUM_CRYPTO_PWHASH_SALTBYTES);
+    $key = sodium_crypto_pwhash(
+        SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
+        $key,
+        $salt,
+        SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+        SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+    );
+    $ciphertext = sodium_crypto_secretbox($message, $nonce, $key);
+    return base64_encode($salt . $nonce . $ciphertext);
+}
+
+function decryptString($ciphertext, $key)
+{
+    $decoded = base64_decode($ciphertext);
+    $salt = substr($decoded, 0, SODIUM_CRYPTO_PWHASH_SALTBYTES);
+    $nonce = substr($decoded, SODIUM_CRYPTO_PWHASH_SALTBYTES, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+    $ciphertext = substr($decoded, SODIUM_CRYPTO_PWHASH_SALTBYTES + SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+    $key = sodium_crypto_pwhash(
+        SODIUM_CRYPTO_SECRETBOX_KEYBYTES,
+        $key,
+        $salt,
+        SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+        SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
+    );
+    $plaintext = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+    if ($plaintext === false) {
+        throw new Exception("Unable to decrypt message");
+    }
+    return $plaintext;
 }

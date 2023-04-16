@@ -127,6 +127,8 @@ $lang = array(
     "none" => "None",
     "your_report_has_been_rejected" => "Your Report has been rejected",
     "reason" => "Reason",
+    "message" => "Message",
+    "send" => "Send",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

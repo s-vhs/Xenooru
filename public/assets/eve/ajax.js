@@ -85,7 +85,7 @@ function flagForDeletion(postId) {
             },
             success: function (response) {
                 if (response == "flagged") {
-                    alert("Success!");
+                    // alert("Success!");
                     let deletion = document.getElementById("deletionFlag");
                     addClass(deletion, "hidden");
                 } else {
@@ -97,7 +97,7 @@ function flagForDeletion(postId) {
             }
         });
     } else {
-        alert("Canceled!");
+        // alert("Canceled!");
     }
 }
 
@@ -114,7 +114,7 @@ function deletePost(postId) {
             },
             success: function (response) {
                 if (response == "deleted") {
-                    alert("Success!");
+                    // alert("Success!");
                     location.reload();
                 } else {
                     alert(response);
@@ -125,7 +125,7 @@ function deletePost(postId) {
             }
         });
     } else {
-        alert("Canceled!");
+        // alert("Canceled!");
     }
 }
 
@@ -139,7 +139,7 @@ function recoverPost(postId) {
             },
             success: function (response) {
                 if (response == "recovered") {
-                    alert("Success!");
+                    // alert("Success!");
                     location.reload();
                 } else {
                     alert(response);
@@ -150,6 +150,6 @@ function recoverPost(postId) {
             }
         });
     } else {
-        alert("Canceled!");
+        // alert("Canceled!");
     }
 }

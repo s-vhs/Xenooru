@@ -236,6 +236,21 @@ function getCookieValue(cookieName) {
     return cookieValue ? cookieValue.pop() : '';
 }
 
+function addClassById(id, className) {
+    const element = document.getElementById(id);
+    if (element && !element.classList.contains(className)) {
+        element.classList.add(className);
+    }
+}
+
+function removeClassById(id, className) {
+    const element = document.getElementById(id);
+    if (element && element.classList.contains(className)) {
+        element.classList.remove(className);
+    }
+}
+
+
 /* Now perform all actions that should be performed */
 
 checkImages();
