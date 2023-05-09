@@ -451,9 +451,7 @@
                                 let firstNumber = parseInt(numbersArray[0]);
                                 let secondNumber = parseInt(numbersArray[1]);
                                 if (!isNaN(firstNumber) && !isNaN(secondNumber)) {
-                                    video.setAttribute("style", "width:" + firstNumber + "px; " + "height:" + firstNumber + "px;");
-                                    video.style.height = firstNumber;
-                                    video.style.width = secondNumber;
+                                    video.setAttribute("style", "width:" + firstNumber + "px; " + "height:" + secondNumber + "px;");
                                 }
                             }
                             return null;
