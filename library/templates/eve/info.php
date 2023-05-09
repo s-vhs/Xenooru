@@ -9,6 +9,7 @@ $theme = array(
         "levelSystem",
         "getUserLevel",
         "deletionFlag",
-        "userCookies"
+        "userCookies",
+        "importPosts"
     ]
 );

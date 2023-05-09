@@ -29,6 +29,16 @@ function now()
     return date("d-m-Y h:i:s");
 }
 
+function jd($text)
+{
+    return json_decode($text, true);
+}
+
+function je($text)
+{
+    return json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+}
+
 function doLog($action, bool $success, $value = null, $user = null)
 {
     require "config.php";
@@ -282,6 +292,67 @@ function processTags(int $postId, $tags)
     return toStringWithSpaces($finalTags);
 }
 
+function altProcessTags(int $postId, $tags)
+{
+    if (!is_array($tags)) $tags = toArrayFromSpaces($tags);
+    require "config.php";
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
+    $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
+    $db["tagRelations"] = new \SleekDB\Store("tagRelations", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags-Verknüpfungen
+    // $post = $db["tags"]->findById($postId);
+    // if (empty($post)) return "Post does not exist";
+    $finalTags = array();
+
+    $relations = $db["tagRelations"]->findBy(["post", "==", $postId]);
+    $rels = array();
+    foreach ($relations as $rel) {
+        array_push($rels, $rel["name"]);
+    }
+
+    foreach ($tags as $_tag) {
+        $tag = parseTag($_tag);
+        $order = getOrder($tag["type"]);
+
+        $exTag = $db["tags"]->findOneBy([["name", "==", $tag["tag"]], "AND", ["type", "==", $tag["type"]]]);
+        $data = [
+            "name" => clean($tag["tag"]),
+            "type" => $tag["type"],
+            "full" => clean($tag["full"]),
+            "order" => $order,
+            "modified" => now(),
+            "timestamp" => now()
+        ];
+        if (empty($exTag)) {
+            $db["tags"]->insert($data);
+            $exTag = $db["tags"]->findOneBy([["name", "==", $tag["tag"]], "AND", ["type", "==", $tag["type"]]]);
+        }
+
+        $data = [
+            "tag" => $exTag["_id"],
+            "name" => clean($tag["tag"]),
+            "type" => $tag["type"],
+            "full" => clean($tag["full"]),
+            "order" => $order,
+            "post" => $postId,
+            "timestamp" => now()
+        ];
+
+        $relation = array();
+        $relation = $db["tagRelations"]->findOneBy([["post", "==", $postId], "AND", ["name", "==", $tag["name"]]]);
+        if (empty($relation))
+            $db["tagRelations"]->insert($data);
+
+        array_push($finalTags, $tag["full"]);
+    }
+
+    foreach ($rels as $relation) {
+        if (!in_array($relation, $finalTags))
+            $db["tagRelations"]->deleteBy(["name", "==", clean($relation)]);
+    }
+
+    return toStringWithSpaces($finalTags);
+}
+
 function isLandsape($file)
 {
     list($width, $height) = getimagesize($file);
@@ -360,4 +431,57 @@ function removeDuplicateByName($arr, $value)
         }
     }
     return $arr;
+}
+
+function callAPI($url)
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+    ));
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    curl_close($curl);
+    if ($err) {
+        return "cURL Error #:" . $err;
+    } else {
+        return $response;
+    }
+}
+
+function xmlToArray($xml)
+{
+    $array = array();
+    foreach ($xml->children() as $element) {
+        $tag = $element->getName();
+        if (!$element->children()) {
+            $array[$tag] = trim((string) $element);
+        } else {
+            $array[$tag][] = xmlToArray($element);
+        }
+    }
+    return $array;
+}
+
+function getFileExtension($filename)
+{
+    return pathinfo($filename, PATHINFO_EXTENSION);
+}
+
+
+function getFileType($filename)
+{
+    $path_parts = pathinfo($filename);
+    $extension = $path_parts["extension"];
+    $type = mime_content_type($filename);
+    return array(
+        "extension" => $extension,
+        "type" => $type
+    );
 }

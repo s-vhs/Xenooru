@@ -4,7 +4,7 @@ if (!file_exists(ps(__DIR__ . "/data/levels.php")))
     if (file_exists(ps(__DIR__ . "/data/levels_default.php")))
         require_once ps(__DIR__ . "/data/levels_default.php");
     else
-        die("Error: No levels file for plugin levelSystem found.");
+        die("Error: No levels_default.php or levels.php file for plugin levelSystem found.");
 else
     require ps(__DIR__ . "/data/levels.php");
 

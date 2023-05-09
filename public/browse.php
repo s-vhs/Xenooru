@@ -179,6 +179,11 @@ if ($page == "browse" || $page == "search" || $page == "post" || $page == "favou
     $tags["artists"] = array();
     $tags["tags"] = array();
     $tags["metas"] = array();
+    $_tags["copyrights"] =  array();
+    $_tags["characters"] = array();
+    $_tags["artists"] = array();
+    $_tags["tags"] = array();
+    $_tags["metas"] = array();
     if ($page == "browse" || $page == "search") {
         $_tags["copyrights"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "==", 1])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         $_tags["characters"] = $db["tagRelations"]->createQueryBuilder()->where(["order", "==", 2])->limit(5)->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
@@ -199,11 +204,6 @@ if ($page == "browse" || $page == "search" || $page == "post" || $page == "favou
         $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 5], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
     } elseif ($page == "favourites") {
         // This is my poor attempt for getting all the tags from the favourited posts and put them in an array. It doesn't work obviously.
-        $_tags["copyrights"] =  array();
-        $_tags["characters"] = array();
-        $_tags["artists"] = array();
-        $_tags["tags"] = array();
-        $_tags["metas"] = array();
         // foreach ($posts as $post) {
         //     $_cprights = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 1], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         //     array_push($_tags["copyrights"], $_cprights[0] ?? array());
