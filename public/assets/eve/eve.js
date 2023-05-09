@@ -27,8 +27,8 @@ function deleteCharactersBeforePosition(inputField, position, numberOfCharacters
     inputField.setSelectionRange(position - numberOfCharacters, position - numberOfCharacters);
 }
 
-function checkImages() {
-    const images = document.querySelectorAll(".img2check");
+function checkImages(clss) {
+    const images = document.querySelectorAll("." + clss);
     let count = 0;
 
     images.forEach((img) => {
@@ -256,7 +256,3 @@ function setNumberToSpan(number, spanId) {
         spanElement.textContent = number;
     }
 }
-
-/* Now perform all actions that should be performed */
-
-checkImages();
