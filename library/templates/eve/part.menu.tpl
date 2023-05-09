@@ -61,7 +61,8 @@
                             <a href="mail.php?tab=inbox" class="mx-1 hover:text-red-200">{$lang.my_mail}</a>
                         </li>
                         <li>
-                            <a href="favourites.php?user={$user._id}" class="mx-1 hover:text-red-200">{$lang.my_favourites}</a>
+                            <a href="browse.php?page=favourites&user={$user._id}"
+                                class="mx-1 hover:text-red-200">{$lang.my_favourites}</a>
                         </li>
                     {else}
                         <li>
@@ -72,7 +73,7 @@
                         </li>
                     {/if}
                     <li>
-                        <a href="favourites.php" class="mx-1 hover:text-red-200">{$lang.everyones_favourites}</a>
+                        <a href="users.php" class="mx-1 hover:text-red-200">{$lang.everyones_favourites}</a>
                     </li>
                     <li>
                         <a href="account.php?tab=options" class="mx-1 hover:text-red-200">{$lang.options}</a>
@@ -86,7 +87,8 @@
                     </li>
                     {if $logged}
                         <li>
-                            <a href="favourites.php?user={$user._id}" class="mx-1 hover:text-red-200">{$lang.my_favourites}</a>
+                            <a href="browse.php?page=favourites&user={$user._id}"
+                                class="mx-1 hover:text-red-200">{$lang.my_favourites}</a>
                         </li>
                     {/if}
                     <li>
@@ -97,10 +99,12 @@
                     <li>
                         <a href="more.php" class="mx-1 hover:text-red-200">{$lang.home}</a>
                     </li>
-                    <li>
-                        <a href="mailto:{$config.email.general}" class="mx-1 hover:text-red-200"
-                            target="_blank">{$lang.contact_us}</a>
-                    </li>
+                    {if !empty($config.email.general)}
+                        <li>
+                            <a href="mailto:{$config.email.general}" class="mx-1 hover:text-red-200"
+                                target="_blank">{$lang.contact_us}</a>
+                        </li>
+                    {/if}
                     <li>
                         <a href="?tab=about" class="mx-1 hover:text-red-200">{$lang.about}</a>
                     </li>

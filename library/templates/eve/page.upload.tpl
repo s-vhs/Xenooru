@@ -103,4 +103,8 @@
     </form>
 </div>
 
+<script>
+    setNumberToSpan({$config.upload.min}, "mintags");
+</script>
+
 {include file="part.footer.tpl"}

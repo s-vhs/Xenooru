@@ -129,6 +129,7 @@ $lang = array(
     "reason" => "Reason",
     "message" => "Message",
     "send" => "Send",
+    "favourites_of" => "Favourites of",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",
@@ -224,7 +225,7 @@ $lang = array(
             "changes_to_this_policy" => "We may make changes to this policy at any time. You may be asked to review and re-accept the information in this policy if it changes in the future.",
         ),
         "upload" => array(
-            "tags" => "At least 5! Separate tags with spaces, ex: green_eyes purple_hair",
+            "tags" => "At least <span id='mintags'></span>! Separate tags with spaces, ex: green_eyes purple_hair",
             "tos" => "I have read the Terms of Service and agree with them.",
             "privacy" => "I have read the Privacy Policy and agree with it.",
         )

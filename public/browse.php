@@ -29,6 +29,42 @@ switch ($_GET["page"] ?? "browse") {
         $title = "{$post["tags"]} score:{$post["score"]} rating:{$post["rating"]} | {$post["_id"]}";
         $page = "post";
         break;
+    case "favourites":
+        $id = clean($_GET["user"]);
+        $favouriter = $db["users"]->findById($id);
+        if (!empty($favouriter)) {
+            $title = "{$lang["favourites_of"]} {$favouriter["username"]} - {$lang["page"]} " . (clean($_GET["pagination"] ?? 1));
+            $page = "favourites";
+
+            $skip = ((clean($_GET["pagination"] ?? 1)) - 1) * $config["perpage"]["posts"];
+            $favourites = $db["favourites"]->createQueryBuilder()
+                ->orderBy(["_id" => "DESC"])
+                ->limit($config["perpage"]["posts"])
+                ->skip($skip)
+                ->where(["user", "==", $favouriter["_id"]])
+                ->getQuery()
+                ->fetch();
+            $posts = array();
+            foreach ($favourites as $fav) {
+                $post = $db["posts"]->findById($fav["post"]);
+                if ($post) array_push($posts, $post);
+            }
+            $totalPages = $db["posts"]->count() / $config["perpage"]["posts"];
+            $pagis = array();
+            for ($i = 0; $i < $totalPages; $i++) {
+                array_push($pagis, $i + 1);
+            }
+
+            $smarty->assign("totalpages", $totalPages);
+            $smarty->assign("pagination", clean($_GET["pagination"] ?? 1));
+            $smarty->assign("posts", $posts);
+            $smarty->assign("favouriter", $favouriter);
+            $smarty->assign("pagis", $pagis);
+            break;
+        } else {
+            header("Location: browse.php");
+            die("user does not exist.");
+        }
     case "search":
         $page = "search";
         $skip = ((clean($_GET["pagination"] ?? 1)) - 1) * $config["perpage"]["posts"];
@@ -136,7 +172,7 @@ $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
 $smarty->assign("pagetitle", $title);
 
-if ($page == "browse" || $page == "search" || $page == "post") {
+if ($page == "browse" || $page == "search" || $page == "post" || $page == "favourites") {
     /* Tag creation begin */
     $tags["copyrights"] = array();
     $tags["characters"] = array();
@@ -161,6 +197,48 @@ if ($page == "browse" || $page == "search" || $page == "post") {
         $_tags["artists"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 3], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         $_tags["tags"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 4], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
         $_tags["metas"] = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 5], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+    } elseif ($page == "favourites") {
+        // This is my poor attempt for getting all the tags from the favourited posts and put them in an array. It doesn't work obviously.
+        $_tags["copyrights"] =  array();
+        $_tags["characters"] = array();
+        $_tags["artists"] = array();
+        $_tags["tags"] = array();
+        $_tags["metas"] = array();
+        // foreach ($posts as $post) {
+        //     $_cprights = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 1], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        //     array_push($_tags["copyrights"], $_cprights[0] ?? array());
+
+        //     $_chrcters = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 2], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        //     array_push($_tags["characters"], $_chrcters[0] ?? array());
+
+        //     $_artsts = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 3], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        //     array_push($_tags["artists"], $_artsts[0] ?? array());
+
+        //     $_tgs = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 4], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        //     array_push($_tags["tags"], $_tgs[0] ?? array());
+
+        //     $_mts = $db["tagRelations"]->createQueryBuilder()->where([["order", "==", 5], "AND", ["post", "==", $post["_id"]]])->orderBy(["name" => "ASC"])->distinct("name")->getQuery()->fetch();
+        //     array_push($_tags["metas"], $_mts[0] ?? array());
+
+        //     // print_r($_tags["copyrights"]);
+        //     // if (!empty($_tags["copyrights"][0])) $_tags["copyrights"] = $_tags["copyrights"][0];
+        //     // if (!empty($_tags["characters"][0])) $_tags["characters"] = $_tags["characters"][0];
+        //     // if (!empty($_tags["artists"][0])) $_tags["artists"] = $_tags["artists"][0];
+        //     // if (!empty($_tags["tags"][0])) $_tags["tags"] = $_tags["tags"][0];
+        //     // if (!empty($_tags["metas"][0])) $_tags["metas"] = $_tags["metas"][0];
+        //     unset($_cprights);
+        //     unset($_chrcters);
+        //     unset($_artsts);
+        //     unset($_tgs);
+        //     unset($_mts);
+        // }
+        // $_tags["copyrights"] = removeDuplicateByName($_tags["copyrights"], "name");
+        // $_tags["characters"] = removeDuplicateByName($_tags["characters"], "name");
+        // $_tags["artists"] = removeDuplicateByName($_tags["artists"], "name");
+        // $_tags["tags"] = removeDuplicateByName($_tags["tags"], "name");
+        // $_tags["metas"] = removeDuplicateByName($_tags["metas"], "name");
+
+        // print_r($_tags["metas"]);
     }
     foreach ($_tags["copyrights"] as $tag) {
         $tag["count"] = count($db["tagRelations"]->findBy(["full", "==", $tag["full"]]));

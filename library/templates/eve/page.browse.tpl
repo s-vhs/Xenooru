@@ -11,7 +11,7 @@
             <button type="submit"
                 class="text-sm text-center bg-red-500 hover:bg-red-300 w-full text-white">{$lang.search}</button>
         </form>
-        {if $page == "browse" || $page == "search"}
+        {if $page == "browse" || $page == "search" || $page == "favourites"}
             <p id="image-replacement-message-div"
                 class="cursor-pointer text-red-500 hover:text-red-300 hidden mt-2 text-sm">
                 <b>
@@ -198,10 +198,14 @@
             <ul class="text-sm">
                 <li>{$lang.id}: {$post._id}</li>
                 <li>{$lang.posted}: {$post.timestamp}</li>
-                <li>{$lang.by} <a href="profile.php?id={$poster._id}"
+                <li>{$lang.by} <a href="users.php?id={$poster._id}"
                         class="text-red-500 hover:text-red-300">{$poster.username}</a></li>
-                <li>{$lang.dimensions}: {$post.file.dimensions}</li>
-                <li>{$lang.size}: {formatBytes($post.file.size)}</li>
+                {if isset($post.file.dimensions)}
+                    <li>{$lang.dimensions}: {$post.file.dimensions}</li>
+                {/if}
+                {if isset($post.file.size)}
+                    <li>{$lang.size}: {formatBytes($post.file.size)}</li>
+                {/if}
                 {if !empty($post.source)}
                     <lil>{$lang.source}: <a href="{$post.source}" target="_blank"
                             class="text-red-500 hover:text-red-300">{$lang.visit}</a></lil>
@@ -241,17 +245,19 @@
                         </li>
                     {/if}
                 {/if}
-                {if $userlevel.perms.can_report && !$hasFlaggedForDeletion}
-                    {if !$post.deleted}
-                        <li id="deletionFlag">
-                            <a class="cursor-pointer text-red-500 hover:text-red-300" onclick="flagForDeletion({$post._id});">
-                                {$lang.flag_for_deletion}
-                            </a>
-                        </li>
+                {if isset($hasFlaggedForDeletion)}
+                    {if $userlevel.perms.can_report && !$hasFlaggedForDeletion}
+                        {if !$post.deleted}
+                            <li id="deletionFlag">
+                                <a class="cursor-pointer text-red-500 hover:text-red-300" onclick="flagForDeletion({$post._id});">
+                                    {$lang.flag_for_deletion}
+                                </a>
+                            </li>
+                        {/if}
+                    {elseif $hasFlaggedForDeletion && isset($deletionFlagRejectionReason) && !empty($deletionFlagRejectionReason)}
+                        <li class="text-italic">{$lang.your_report_has_been_rejected}. {$lang.reason}:
+                            {$deletionFlagRejectionReason}</li>
                     {/if}
-                {elseif $hasFlaggedForDeletion && isset($deletionFlagRejectionReason) && !empty($deletionFlagRejectionReason)}
-                    <li class="text-italic">{$lang.your_report_has_been_rejected}. {$lang.reason}:
-                        {$deletionFlagRejectionReason}</li>
                 {/if}
                 {if $userlevel.perms.can_manage_favourites}
                     <li>
@@ -296,19 +302,21 @@
     </div>
     <div class="col-span-7">
         {if $page != "post"}
+            {if $page == "favourites"}
+                <h1 class="text-2xl mb-2">{$lang.favourites_of} <a href="users.php?id={$favouriter._id}"
+                        class="text-red-500 hover:text-red-300">{$favouriter.username}</a></h1>
+            {/if}
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-                {if $page == "browse" || $page == "search"}
-                    {foreach from=$posts item=item key=key name=name}
-                        <div class="mx-auto">
-                            <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
-                                <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
-                                    alt="If you're reading this, you have JavaScript disabled or try reloading the page"
-                                    class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-[300px] h-auto{else}h-[200px] w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
+                {foreach from=$posts item=item key=key name=name}
+                    <div class="mx-auto">
+                        <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
+                            <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
+                                alt="If you're reading this, you have JavaScript disabled or try reloading the page"
+                                class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-[300px] h-auto{else}h-[200px] w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
 
-                            </a>
-                        </div>
-                    {/foreach}
-                {/if}
+                        </a>
+                    </div>
+                {/foreach}
                 <div class="col-span-full mx-auto">
                     {if $pagination > 1}
                         <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination=1"
@@ -346,7 +354,139 @@
             </div>
         {else}
             {if !$post.deleted}
-                <img src="{$config.db.uploads.0}/{$post.file.database.file}" class="w-auto max-w-full">
+                {if $post.file.type.name == "image"}
+                    <img src="{$config.db.uploads.0}/{$post.file.database.file}" class="w-auto max-w-full">
+                {elseif $post.file.type.name == "video"}
+                    <div id="playerContainer">
+                        <video id="player" class="w-auto max-w-full" onload="alert('hi');">
+                            <source src="{$config.db.uploads.0}/{$post.file.database.file}" type="video/{$post.file.type.ext}">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+
+                    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+                    <script>
+                        // fluidPlayer method is global when CDN distribution is used.
+                        var player = fluidPlayer(
+                            'player', {
+                                layoutControls: {
+                                    // Parameters to customise the look and feel of the player
+                                    primaryColor: "#fc0303",
+                                    playButtonShowing: true,
+                                    playPauseAnimation: true,
+                                    fillToContainer: true,
+                                    autoPlay: false,
+                                    preload: true,
+                                    mute: false,
+                                    doubleclickFullscreen: true,
+                                    subtitlesEnabled: false,
+                                    keyboardControl: true,
+                                    layout: 'default',
+                                    allowDownload: true,
+                                    playbackRateEnabled: true,
+                                    allowTheatre: true,
+                                    title: false,
+                                    loop: true,
+                                    controlBar: {
+                                        autoHide: true,
+                                        autoHideTimeout: 3,
+                                        animated: true
+                                    },
+                                    // theatreSettings: {
+                                    //     width: '85%', // Default '100%'
+                                    //     height: '80%', // Default '60%'
+                                    //     marginTop: 150, // Default 0,
+                                    //     horizontalAlign: 'right' // 'left', 'right' or 'center'
+                                    // },
+                                    // contextMenu: {
+                                    //     controls: true,
+                                    //     links: [{
+                                    //         href: 'https://rule34.xxx',
+                                    //         label: 'Rule 34'
+                                    //     }]
+                                    // },
+                                    // showCardBoardView: true,
+                                    // showCardBoardJoystick: true
+                                },
+                                vastOptions: {
+                                    adList: [
+                                        // {
+                                        //     roll: 'postRoll',
+                                        //     vastTag: '../vast/vast.xml',
+                                        //     adText: 'Consider to Donate to keep us alive <3',
+                                        // },
+                                        // {
+                                        //     roll: 'preRoll',
+                                        //     vastTag: '../vast/vast2.xml',
+                                        //     adText: 'Consider to Donate to keep us alive <3',
+                                        // },
+                                        // {
+                                        //     roll: 'midRoll',
+                                        //     vastTag: '../vast/vast3.xml',
+                                        //     adText: 'Advertise videos today on ForgerFiles!',
+                                        //     timer: '50%'
+                                        // },
+                                    ],
+                                    skipButtonCaption: 'Skip ad in [seconds] seconds',
+                                    skipButtonClickCaption: 'Skip ad <span class="skip_button_icon"></span>',
+                                    adText: null,
+                                    adTextPosition: 'top left',
+                                    adCTATextVast: true,
+                                    adCTAText: 'Donate!',
+                                    adCTATextPosition: 'bottom right',
+                                    vastTimeout: 5000,
+                                    showPlayButton: true,
+                                    maxAllowedVastTagRedirects: 1,
+                                    showProgressbarMarkers: true
+                                }
+                            }
+                        );
+                    </script>
+
+                    <script>
+                        function adjustVideoHeight(string) {
+                            let numbersArray = string.split('x');
+                            let video = document.getElementById("playerContainer");
+                            if (numbersArray.length === 2) {
+                                let firstNumber = parseInt(numbersArray[0]);
+                                let secondNumber = parseInt(numbersArray[1]);
+                                if (!isNaN(firstNumber) && !isNaN(secondNumber)) {
+                                    video.setAttribute("style", "width:" + firstNumber + "px; " + "height:" + firstNumber + "px;");
+                                    video.style.height = firstNumber;
+                                    video.style.width = secondNumber;
+                                }
+                            }
+                            return null;
+                        }
+
+                        adjustVideoHeight("{$post.file.dimensions}");
+
+                        function failed(e) {
+                            // video playback failed - show an alert saying why
+                            switch (e.target.error.code) {
+                                case e.target.error.MEDIA_ERR_ABORTED:
+                                    alert("You aborted the video playback.");
+                                    break;
+                                case e.target.error.MEDIA_ERR_NETWORK:
+                                    alert("A network error caused the video download to fail part-way.");
+                                    break;
+                                case e.target.error.MEDIA_ERR_DECODE:
+                                    alert(
+                                        "The video playback was aborted due to a corruption problem or because the video used features your browser did not support."
+                                    );
+                                    break;
+                                case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                                    alert(
+                                        "The video could not be loaded, either because the server or network failed or because the format is not supported."
+                                    );
+                                    break;
+                                default:
+                                    alert("An unknown error occurred.");
+                                    break;
+                            }
+                        }
+                    </script>
+                {/if}
             {else}
                 <div class="border border-2 border-red-500 p-2">
                     <p>

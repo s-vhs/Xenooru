@@ -22,10 +22,12 @@
     <p>
         {$lang.content_loaded_in} {$loadingtime} {$lang.seconds}
     </p>
-    <p>
-        <a href="mailto:{$config["email"]["general"]}" target="_blank"
-            class="underline hover:text-red-300">{$lang.contact}</a>
-    </p>
+    {if !empty($config.email.general)}
+        <p>
+            <a href="mailto:{$config["email"]["general"]}" target="_blank"
+                class="underline hover:text-red-300">{$lang.contact}</a>
+        </p>
+    {/if}
 </div>
 
 <div id="cutomizationModal" tabindex="-1"

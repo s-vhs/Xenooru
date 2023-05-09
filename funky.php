@@ -322,3 +322,42 @@ function decryptString($ciphertext, $key)
     }
     return $plaintext;
 }
+
+function removeDuplicatesByValue($array, $value)
+{
+    $count = array_count_values(array_column($array, $value));
+    $result = array_filter($array, function ($item) use ($count, $value) {
+        return $count[$item[$value]] === 1;
+    });
+    return array_values($result);
+}
+
+function removeDuplicates($tags)
+{
+    $nameCounts = array();
+    foreach ($tags as $index => $subArray) {
+        foreach ($subArray as $key => $value) {
+            $name = $value["name"];
+            if (isset($nameCounts[$name])) {
+                unset($tags[$index][$key]);
+            } else {
+                $nameCounts[$name] = 1;
+            }
+        }
+    }
+    return $tags;
+}
+
+function removeDuplicateByName($arr, $value)
+{
+    if (empty($arr) || !is_array($arr)) return $arr;
+    $uniqueValues = array();
+    foreach ($arr as $key => $item) {
+        if (!in_array($item[$value], $uniqueValues)) {
+            $uniqueValues[] = $item[$value];
+        } else {
+            unset($arr[$key]);
+        }
+    }
+    return $arr;
+}

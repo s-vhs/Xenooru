@@ -250,6 +250,12 @@ function removeClassById(id, className) {
     }
 }
 
+function setNumberToSpan(number, spanId) {
+    let spanElement = document.getElementById(spanId);
+    if (spanElement) {
+        spanElement.textContent = number;
+    }
+}
 
 /* Now perform all actions that should be performed */
 

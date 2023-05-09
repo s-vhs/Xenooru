@@ -2,11 +2,13 @@
 
 <div class="mx-4 mt-2 animate__animated animate__fadeIn">
     {if $tab == "home"}
-        <h1 class="text-xl font-bold">
-            <a href="mailto:{$config.email.general}" class="text-red-500 hover:text-red-300" target="_blank">
-                » {$lang.contact_us}
-            </a>
-        </h1>
+        {if !empty($config.email.general)}
+            <h1 class="text-xl font-bold">
+                <a href="mailto:{$config.email.general}" class="text-red-500 hover:text-red-300" target="_blank">
+                    » {$lang.contact_us}
+                </a>
+            </h1>
+        {/if}
         <h1 class="text-xl font-bold mt-1">
             <a href="?tab=about" class="text-red-500 hover:text-red-300">
                 » {$lang.about}

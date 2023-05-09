@@ -22,7 +22,7 @@
             </h1>
             <p class="text-sm">{$lang.phrases.my_mail}</p>
             <h1 class="text-xl font-bold mt-1">
-                <a href="favourites.php?user={$user._id}" class="text-red-500 hover:text-red-300">
+                <a href="browse.php?page=favourites&user={$user._id}" class="text-red-500 hover:text-red-300">
                     » {$lang.my_favourites}
                 </a>
             </h1>
@@ -45,7 +45,7 @@
             <p class="text-sm">{$lang.phrases.signup}</p>
         {/if}
         <h1 class="text-xl font-bold mt-1">
-            <a href="favourites.php" class="text-red-500 hover:text-red-300">
+            <a href="users.php" class="text-red-500 hover:text-red-300">
                 » {$lang.everyones_favourites}
             </a>
         </h1>

@@ -104,6 +104,7 @@ if (isset($_POST["upload"])) {
                                         "score" => 0,
                                         "file" => array(
                                             "name" => $fileName,
+                                            "hash" => null,
                                             "type" => array(
                                                 "ext" => $fileType,
                                                 "name" => $fileArrayType
@@ -126,13 +127,26 @@ if (isset($_POST["upload"])) {
                                     $post = $db["posts"]->insert($data);
                                     if ($post) {
                                         $tags = processTags($post["_id"], clean($_POST["tags"]));
-                                        $data = [
-                                            "tags" => trim($tags)
-                                        ];
+                                        $fileHash = hash_file("md5", $targetFile);
+                                        $data["tags"] = trim($tags);
+                                        $data["file"]["hash"] = $fileHash;
                                         $db["posts"]->updateById($post["_id"], $data);
-                                        logTags($post["_id"], $rating, "", $tags, $source, $title, $user["_id"], $user["username"]);
-                                        doLog("upload", true, $post["_id"], $user["_id"]);
-                                        header("Location: browse.php?page=post&id={$post["_id"]}");
+                                        $search = $db["posts"]->findBy(["file.hash", "==", $fileHash]);
+                                        if (count($search) > 1) {
+                                            // hash already in DB
+                                            doLog("upload", false, "post already exists, awaiting manual approval.", $user["_id"]);
+                                            $smarty->assign("error", "File already exists! Uploaded and put in approval queue.");
+                                            $data = array(
+                                                "status" => "awaiting"
+                                            );
+                                            $db["posts"]->updateById($post["_id"], $data);
+                                            header("Refresh: 2; url=browse.php?page=post&id={$post["_id"]}");
+                                        } else {
+                                            // Hash not in DB, post!
+                                            logTags($post["_id"], $rating, "", $tags, $source, $title, $user["_id"], $user["username"]);
+                                            doLog("upload", true, $post["_id"], $user["_id"]);
+                                            header("Location: browse.php?page=post&id={$post["_id"]}");
+                                        }
                                     } else {
                                         doLog("upload", false, "inserting data failed.", $user["_id"]);
                                         $smarty->assign("error", "The server messed up!");

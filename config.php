@@ -8,8 +8,8 @@ $config["logs"] = true; // Keep logs of actions?
 $config["debug"] = true;
 
 // Emails
-$config["email"]["general"] = "hello@domain.com";
-$config["email"]["info"] = "info@domain.com";
+$config["email"]["general"] = "hello@domain.com"; // Leave empty to hide it
+$config["email"]["info"] = "info@domain.com"; // Leave empty to hide it
 
 // Captcha
 $config["captcha"]["enabled"] = false;
@@ -33,7 +33,7 @@ $config["upload"]["allowed"]["video"] = array(
     ".avi",
     ".mkv",
 );
-$config["upload"]["min"] = 5; // Min amount of tags on new/existing post
+$config["upload"]["min"] = 0; // Min amount of tags on new/existing post
 
 // Thumbnails
 $config["thumbnail"]["enabled"] = true; // Requires Imagick, generation will keep aspect ratio!
