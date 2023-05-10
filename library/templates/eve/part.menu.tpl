@@ -94,7 +94,10 @@
                     <li>
                         <a href="?page=random" class="mx-1 hover:text-red-200">{$lang.random}</a>
                     </li>
-
+                {elseif $pages.isWiki}
+                    <li>
+                        <a href="wiki.php" class="mx-1 hover:text-red-200">{$lang.all_terms}</a>
+                    </li>
                 {elseif $pages.isMore}
                     <li>
                         <a href="more.php" class="mx-1 hover:text-red-200">{$lang.home}</a>

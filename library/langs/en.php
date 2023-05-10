@@ -130,6 +130,9 @@ $lang = array(
     "message" => "Message",
     "send" => "Send",
     "favourites_of" => "Favourites of",
+    "term" => "Term",
+    "all_terms" => "All Terms",
+    "this_term_has_no_definition_yet" => "This term has no definition yet",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

@@ -5,7 +5,7 @@ if (!file_exists(ps(__DIR__ . "/data/import_urls.php")))
 else
     require ps(__DIR__ . "/data/import_urls.php");
 
-if ($logged) {
+if ($logged && $userlevel["perms"]["can_post"]) {
     if (isset($_GET["action"]) && !empty($_GET["action"]) && clean($_GET["action"]) == "importPost") {
         echo "Starting importing post...<br>";
         if (isset($_GET["source"]) && !empty($_GET["source"]) && in_array(clean($_GET["source"]), $importUrls)) {

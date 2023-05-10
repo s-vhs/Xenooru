@@ -9,6 +9,16 @@ function clean($data)
     return $data;
 }
 
+function sanitizeText($text)
+{
+    // Convert special characters to HTML entities
+    $text = htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, "UTF-8");
+    // Strip out any remaining tags that may have gotten through
+    $text = strip_tags($text);
+    // Return the sanitized text
+    return $text;
+}
+
 function stripNumbers($input)
 {
     return preg_replace("/[^0-9]/", "", json_encode($input));
@@ -37,6 +47,15 @@ function jd($text)
 function je($text)
 {
     return json_encode($text, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+}
+
+function bbcodeLink($text)
+{
+    // Convert BBCode URLs to HTML links
+    $text = preg_replace('/\[url\](.*?)\[\/url\]/is', '<a href="$1" target="_blank" class="link">$1</a>', $text);
+
+    // Return the converted text
+    return $text;
 }
 
 function doLog($action, bool $success, $value = null, $user = null)

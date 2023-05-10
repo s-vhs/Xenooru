@@ -32,6 +32,8 @@ $db["commentVotes"] = new \SleekDB\Store("commentVotes", platformSlashes($config
 $db["tagLogs"] = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Logs
 $db["favourites"] = new \SleekDB\Store("favourites", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Favoriten
 $db["flagsDeletion"] = new \SleekDB\Store("flagsDeletion", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Lösch-Anfragen
+$db["wikiTerms"] = new \SleekDB\Store("wikiTerms", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Wiki-Einträge
+$db["wikiEdits"] = new \SleekDB\Store("wikiEdits", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Wiki-Bearbeitungen
 
 // Sitzungs-überprüfung
 require "session.php";
