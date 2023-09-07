@@ -117,7 +117,8 @@ function modifyHiddenImages() {
     hiddenImages.forEach(img => {
         if (img.classList.contains("h-[200px]") && img.classList.contains("w-auto")) {
             // img.setAttribute("altClass", img.classList.value);
-            img.classList.remove("h-[200px]", "w-auto");
+            img.classList.remove("h-[200px]");
+            img.classList.remove("w-auto");
             img.classList.add("w-full");
             img.setAttribute("prvHClass", "h-[200px]");
             // img.setAttribute("prvWClass", "w-auto");
