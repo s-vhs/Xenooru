@@ -11,3 +11,21 @@ ol {
     list-style-type: decimal;
     list-style-position: inside;
 }
+
+.link {
+    color: rgb(239 68 68);
+}
+
+.link:hover {
+    color: rgb(240 82 82);
+}
+
+.spoiler {
+    background: black;
+    text: black;
+    cursor: pointer;
+}
+
+.spoiler:hover {
+    background-color: white;
+}

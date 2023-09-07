@@ -330,6 +330,8 @@ if ($page == "post" && $userlevel["perms"]["can_comment"] && isset($_POST["comme
     }
 }
 
+require "../endtime.php";
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.browse.tpl");
 $smarty->display("part.bottom.tpl");

@@ -319,18 +319,18 @@
                 {/foreach}
                 <div class="col-span-full mx-auto">
                     {if $pagination > 1}
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination=1"
+                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination=1"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &lt;&lt;
                         </a>
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination={$pagination - 1}"
+                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination - 1}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &lt;
                         </a>
                     {/if}
                     {foreach from=$pagis item=item key=key name=name}
                         {if $pagination != $item}
-                            <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination={$item}"
+                            <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$item}"
                                 class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                                 {$item}
                             </a>
@@ -341,11 +341,11 @@
                         {/if}
                     {/foreach}
                     {if $pagination < $totalpages}
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination={$pagination + 1}"
+                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination + 1}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &gt;
                         </a>
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}pagination={$totalpages}"
+                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$totalpages}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &gt;&gt;
                         </a>

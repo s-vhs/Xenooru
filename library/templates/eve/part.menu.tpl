@@ -38,6 +38,12 @@
                     <a href="more.php"
                         class="{if $pages.isMore}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.more}</a>
                 </li>
+                {if $logged && $userlevel.perms.can_manage_reports}
+                    <li>
+                        <a href="admin.php"
+                            class="{if $pages.isAdmin}text-white bg-red-500 font-bold{else}text-red-500 hover:text-red-300{/if} p-1">{$lang.admin}</a>
+                    </li>
+                {/if}
             </ul>
         </div>
     </div>
@@ -119,6 +125,19 @@
                     </li>
                     <li>
                         <a href="?tab=privacy" class="mx-1 hover:text-red-200">{$lang.privacy_policy}</a>
+                    </li>
+                {elseif $pages.isAdmin}
+                    <li>
+                        <a href="?tab=home" class="mx-1 hover:text-red-200">{$lang.home}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=aqueue" class="mx-1 hover:text-red-200">{$lang.approval_queue}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=creports" class="mx-1 hover:text-red-200">{$lang.comment_reports}</a>
+                    </li>
+                    <li>
+                        <a href="?tab=preports" class="mx-1 hover:text-red-200">{$lang.post_reports}</a>
                     </li>
                 {/if}
             </ul>

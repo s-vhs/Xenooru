@@ -23,6 +23,8 @@ $smarty->assign("tab", $tab);
 $smarty->assign("pages", $pages);
 $smarty->assign("pagetitle", $lang["more"]);
 
+require "../endtime.php";
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.more.tpl");
 $smarty->display("part.bottom.tpl");

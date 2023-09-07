@@ -51,8 +51,12 @@ function je($text)
 
 function bbcodeLink($text)
 {
-    // Convert BBCode URLs to HTML links
+    // Convert BBCode URLs and stuff to HTML links
     $text = preg_replace('/\[url\](.*?)\[\/url\]/is', '<a href="$1" target="_blank" class="link">$1</a>', $text);
+    $text = preg_replace('/\[i\](.*?)\[\/i\]/is', '<em>$1</em>', $text);
+    $text = preg_replace('/\[spoiler\](.*?)\[\/spoiler\]/is', '<span class="spoiler">$1</span>', $text);
+    $text = preg_replace('/\[b\](.*?)\[\/b\]/is', '<strong>$1</strong>', $text);
+    $text = preg_replace('/\[s\](.*?)\[\/s\]/is', '<del>$1</del>', $text);
 
     // Return the converted text
     return $text;
@@ -95,6 +99,27 @@ function logTags(int $post, string $rating, string $before, string $after, strin
         "after" => clean(strtolower($after)),
         "source" => clean($source),
         "title" => clean($title),
+        "user" => $user,
+        "username" => clean($username),
+        "ip" => clean($_SERVER["REMOTE_ADDR"]),
+        "timestamp" => now()
+    );
+    $db->insert($data);
+    return true;
+}
+
+function logTerm(int $term, string $before, string $after, int $user, string $username)
+{
+    require "config.php";
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
+    $db = new \SleekDB\Store("wikiLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tag-Logs
+    if (empty($term) || !is_numeric($term)) return false;
+    if (empty($after)) return false;
+    if (!empty($user) && !is_numeric($user)) return false;
+    $data = array(
+        "term" => stripNumbers($term),
+        "before" => clean($before),
+        "after" => clean($after),
         "user" => $user,
         "username" => clean($username),
         "ip" => clean($_SERVER["REMOTE_ADDR"]),

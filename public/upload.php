@@ -169,6 +169,8 @@ if (isset($_POST["upload"])) {
     }
 }
 
+require "../endtime.php";
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.upload.tpl");
 $smarty->display("part.bottom.tpl");

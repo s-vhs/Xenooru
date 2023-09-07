@@ -33,7 +33,7 @@ $db["tagLogs"] = new \SleekDB\Store("tagLogs", platformSlashes($config["db"]["pa
 $db["favourites"] = new \SleekDB\Store("favourites", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Favoriten
 $db["flagsDeletion"] = new \SleekDB\Store("flagsDeletion", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Lösch-Anfragen
 $db["wikiTerms"] = new \SleekDB\Store("wikiTerms", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Wiki-Einträge
-$db["wikiEdits"] = new \SleekDB\Store("wikiEdits", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Wiki-Bearbeitungen
+$db["wikiLogs"] = new \SleekDB\Store("wikiLogs", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Wiki-Bearbeitungen
 
 // Sitzungs-überprüfung
 require "session.php";
@@ -65,7 +65,9 @@ $pages = array(
     "isTags" => false,
     "isForums" => false,
     "isWiki" => false,
-    "isMore" => false
+    "isMore" => false,
+    "isAdmin" => false,
+    "isError" => false,
 );
 
 // Nun alles unwichtige andere
@@ -101,9 +103,6 @@ foreach (glob(platformSlashes($config["smarty"]["template"] . "*")) as $_theme) 
 }
 $smarty->assign("langs", $langs);
 $smarty->assign("themes", $themes);
-
-$endtime = microtime(true);
-$smarty->assign("loadingtime", substr($endtime - $starttime, 0, -10));
 
 // Getting all plugins for the Theme
 foreach ($theme["plugins"] as $reqPlugin) {

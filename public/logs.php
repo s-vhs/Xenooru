@@ -25,6 +25,8 @@ $smarty->assign("page", $page);
 $smarty->assign("pages", $pages);
 $smarty->assign("pagetitle", $lang["logs"]);
 
+require "../endtime.php";
+
 $smarty->display("part.top.tpl");
 $smarty->display("page.logs.tpl");
 $smarty->display("part.bottom.tpl");

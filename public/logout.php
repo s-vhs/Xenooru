@@ -8,3 +8,4 @@ if ($logged) {
 }
 
 header("Location: account.php");
+die("lol");
