@@ -301,7 +301,7 @@
         <!-- Chibi end -->
     </div>
     <div class="col-span-7">
-        {if $page != "post"}
+        {if $page !== "post"}
             {if $page == "favourites"}
                 <h1 class="text-2xl mb-2">{$lang.favourites_of} <a href="users.php?id={$favouriter._id}"
                         class="text-red-500 hover:text-red-300">{$favouriter.username}</a></h1>
