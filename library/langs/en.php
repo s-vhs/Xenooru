@@ -144,6 +144,10 @@ $lang = array(
     "admin" => "Admin",
     "back" => "Back",
     "cancel" => "Cancel",
+    "type" => "Type",
+    "name" => "Name",
+    "actions" => "Actions",
+    "google" => "Google",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

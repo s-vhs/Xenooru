@@ -129,6 +129,28 @@ function logTerm(int $term, string $before, string $after, int $user, string $us
     return true;
 }
 
+function cutTextAtCharacter($inputString, $character, $cutBefore = true)
+{
+    // Find the position of the character in the input string
+    $position = strpos($inputString, $character);
+
+    // Check if the character was found
+    if ($position !== false) {
+        if ($cutBefore) {
+            // If cutBefore is true, cut off text before and including the character
+            $result = substr($inputString, $position + 1);
+        } else {
+            // If cutBefore is false, cut off text after the character
+            $result = substr($inputString, 0, $position);
+        }
+
+        return $result;
+    } else {
+        // If the character is not found, return the original string
+        return $inputString;
+    }
+}
+
 function visit()
 {
     require "config.php";

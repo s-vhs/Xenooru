@@ -7,7 +7,8 @@ if (isset($_GET["term"]) && empty($_GET["term"])) {
     die("No term given.");
 }
 
-if (isset($_GET["term"])) {
+if (isset($_GET["term"]) && !empty($_GET["term"])) {
+    $tab = "term";
     $exists = false;
     $term = clean($_GET["term"]);
 
@@ -25,18 +26,20 @@ if (isset($_GET["term"])) {
     }
 
     $smarty->assign("exists", $exists);
-    $tab = "term";
-
-    if ($logged && $userlevel["perms"]["can_edit_wiki"]) {
-        if (isset($_POST["editTerm"])) {
-            $description = clean($_POST["description"]);
-        }
-    }
 } else {
     $tab = "home";
     $pagination = 1;
     if (isset($_GET["pagination"]) && !empty($_GET["pagination"]) && is_numeric($_GET["pagination"]))
         $pagination = clean($_GET["pagination"]);
+
+
+    // Pagination
+    $pagination = 1;
+    $skip = ($pagination - 1) * $config["perpage"]["terms"];
+
+    $terms = $db["wikiTerms"]->findAll(["_id" => "DESC"], $config["perpage"]["terms"], $skip);
+
+    $smarty->assign("terms", $terms);
     $smarty->assign("pagination", $pagination);
 }
 

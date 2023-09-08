@@ -52,6 +52,7 @@ $config["perpage"]["posts"] = 36;
 $config["perpage"]["comments"] = 50;
 $config["perpage"]["announcements"] = 50;
 $config["perpage"]["tags"] = 100;
+$config["perpage"]["terms"] = 100;
 
 // Diese Software nutzt Smarty als Template-Engine. Dokumentation: https://smarty-php.github.io/smarty/
 $config["smarty"]["template"] = __DIR__ . "/library/templates/"; // Dies muss mit einen Schrägstriche enden!

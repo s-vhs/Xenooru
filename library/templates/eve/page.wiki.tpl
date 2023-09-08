@@ -3,6 +3,50 @@
 <div class="mx-4 mt-2 animate__animated animate__fadeIn">
     {if $tab == "home"}
         <h1 class="text-2xl">{$lang.wiki} - {$lang.page} {$pagination}</h1>
+
+        <div class="mt-2 relative overflow-x-auto">
+            <table class="w-full text-sm text-left border border-black">
+                <thead class="text-xs uppercase bg-red-500 text-white border border-black text-center">
+                    <tr>
+                        <th scope="col" class="px-2 py-1 border border-black w-[10%]">
+                            {$lang.actions}
+                        </th>
+                        <th scope="col" class="px-2 py-1 border border-black w-[30%]">
+                            {$lang.name}
+                        </th>
+                        <th scope="col" class="px-2 py-1 border border-black">
+                            {$lang.type}
+                        </th>
+                        <th scope="col" class="px-2 py-1 border border-black w-[20%]">
+                            {$lang.options}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach from=$terms item=item key=key name=name}
+                        <tr class="bg-white hover:bg-gray-50 border border-black">
+                            <td class="px-2 py-1 text-right">
+                                <a href="browse.php?page=search&query={$item.term}"
+                                    class="text-red-500 hover:text-red-300">{$lang.search}</a> |
+                                <a href="wiki.php?term={$item.term}" class="text-red-500 hover:text-red-300">{$lang.wiki}</a> |
+                                <a href='https://www.google.com/search?q=What+does+"{cutTextAtCharacter($item.term, ":")}"+mean%3F'
+                                    class="text-red-500 hover:text-red-300" target="_blank">{$lang.google}</a>
+                            </td>
+                            <th class="px-2 py-1">
+                                <a href="wiki.php?term={$item.term}"
+                                    class="text-red-500 hover:text-red-300">{cutTextAtCharacter($item.term, ":")}</a>
+                            </th>
+                            <td class="px-2 py-1">
+                                {cutTextAtCharacter($item.term, ":", false)}
+                            </td>
+                            <td class="px-2 py-1 text-right">
+                                {$lang.none}
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
     {elseif $tab == "term"}
         <h1 class="text-2xl">{$lang.term}: <a href="browse.php?page=search&query={$smarty.get.term|escape}"
                 class="text-red-500 hover:text-red-300">{$smarty.get.term|escape}</a></h1>
@@ -38,7 +82,7 @@
             {/if}
             |
             {if $exists}
-                <a href="logs.php?page=wiki&id={$term.$_id}" class="text-red-500 hover:text-red-300">{$lang.view_past_edits}</a>
+                <a href="logs.php?page=wiki&id={$term._id}" class="text-red-500 hover:text-red-300">{$lang.view_past_edits}</a>
             {else}
                 {$lang.there_are_no_past_edits}
             {/if}
