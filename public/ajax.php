@@ -264,5 +264,3 @@ if (isset($_POST["updateTerm"])) {
     logTerm($termId, $exists ? $term["description"] : "", $description, $user["_id"], $user["username"]);
     die("success");
 }
-
-die("Привет!");

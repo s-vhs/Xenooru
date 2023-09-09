@@ -1,6 +1,6 @@
 {include file="part.menu.tpl"}
 
-<div class="mx-4 mt-2 animate__animated animate__fadeIn">
+<div class="mx-4 mt-2">
     {if $tab == "home"}
         <h1 class="text-2xl">{$lang.wiki} - {$lang.page} {$pagination}</h1>
 
