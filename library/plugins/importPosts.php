@@ -7,6 +7,10 @@ else
 
 if ($logged && $userlevel["perms"]["can_post"]) {
     if (isset($_GET["action"]) && !empty($_GET["action"]) && clean($_GET["action"]) == "importPost") {
+        if (strpos($currentUrl, "blank.php") == false) {
+            header("Location: blank.php?action=importPost&source={$_GET["source"]}&pid={$_GET["pid"]}");
+            die("lol");
+        }
         echo "Starting importing post...<br>";
         if (isset($_GET["source"]) && !empty($_GET["source"]) && in_array(clean($_GET["source"]), $importUrls)) {
             echo "Getting source...<br>";
@@ -23,7 +27,7 @@ if ($logged && $userlevel["perms"]["can_post"]) {
 
                 switch ($importMethod["type"]) {
                     case "gelbooru_beta_0-2-0":
-                        echo "Case: 'gelbooru_beta_0-2-0<br>";
+                        echo "Case: 'gelbooru_beta_0-2-0'<br>";
                         // Get everything right
                         $fullUrl = $importMethod["api"] . $pid;
 

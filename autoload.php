@@ -3,6 +3,8 @@
 // Wie lange braucht die Seite um zu laden?
 $starttime = microtime(true);
 
+$currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
 // Erst nehmen wir alles wichtige
 require "config.php";
 $config["debug"] == true ? error_reporting(E_ALL) && ini_set('display_errors', 1) : error_reporting(0) && ini_set('display_errors', 0);
