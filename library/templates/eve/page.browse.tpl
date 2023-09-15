@@ -200,7 +200,7 @@
             <ul class="text-sm">
                 <li>{$lang.id}: {$post._id}</li>
                 <li>{$lang.posted}: {$post.timestamp}</li>
-                <li>{$lang.by} <a href="users.php?id={$poster._id}"
+                <li>{$lang.by} <a href="profile.php?id={$poster._id}"
                         class="text-red-500 hover:text-red-300">{$poster.username}</a></li>
                 {if isset($post.file.dimensions)}
                     <li>{$lang.dimensions}: {$post.file.dimensions}</li>

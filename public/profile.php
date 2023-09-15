@@ -3,9 +3,14 @@
 require "../autoload.php";
 
 $pages["isAccount"] = true;
-$uid = $user["_id"];
+if (!empty($user["_id"]))
+    $uid = $user["_id"];
 if (isset($_GET["id"]) && !empty($_GET["id"]) && is_numeric($_GET["id"])) {
     $uid = clean($_GET["id"]);
+}
+if (empty($uid)) {
+    header("Location: error.php");
+    die("no uid given, goofball.");
 }
 $profile = $db["users"]->findById($uid);
 if (empty($profile)) {
