@@ -51,8 +51,7 @@ if ($logged && $userlevel["perms"]["can_post"]) {
 
                         // First check MD5
                         $md5 = $result["post"]["@attributes"]["md5"];
-                        // $md5check = $db["posts"]->findBy(["file.hash", "==", $md5]);
-                        $md5check = "";
+                        $md5check = $db["posts"]->findBy(["file.hash", "==", $md5]);
                         echo "Checking if MD5 in DataBase...<br>";
 
                         if (empty($md5check)) {
