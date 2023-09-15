@@ -3,7 +3,7 @@
 require "../autoload.php";
 
 $pages["isAccount"] = true;
-if (!empty($user["_id"]))
+if (isset($user["_id"]) && !empty($user["_id"]) && is_numeric($user["_id"]))
     $uid = $user["_id"];
 if (isset($_GET["id"]) && !empty($_GET["id"]) && is_numeric($_GET["id"])) {
     $uid = clean($_GET["id"]);
