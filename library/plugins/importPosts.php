@@ -51,7 +51,8 @@ if ($logged && $userlevel["perms"]["can_post"]) {
 
                         // First check MD5
                         $md5 = $result["post"]["@attributes"]["md5"];
-                        $md5check = $db["posts"]->findBy(["file.hash", "==", $md5]);
+                        // $md5check = $db["posts"]->findBy(["file.hash", "==", $md5]);
+                        $md5check = "";
                         echo "Checking if MD5 in DataBase...<br>";
 
                         if (empty($md5check)) {
@@ -162,6 +163,7 @@ if ($logged && $userlevel["perms"]["can_post"]) {
                                                     $data["tags"] = trim($tags);
                                                     $data["file"]["hash"] = $fileHash;
                                                     $db["posts"]->updateById($post["_id"], $data);
+                                                    die(print_r($result["post"]["@attributes"]["tags"]));
                                                 } else {
                                                     echo "Error! The server messed up.";
                                                     doLog("upload", false, "inserting data failed.", $user["_id"]);

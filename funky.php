@@ -280,6 +280,60 @@ function parseTag($tag)
     return ["type" => $type, "tag" => $tag, "full" => $type . ":" . $tag];
 }
 
+function parseTag2($tag)
+{
+    require "config.php";
+    require_once platformSlashes(__DIR__ . "/library/SleekDB/Store.php");
+    $db["tags"] = new \SleekDB\Store("tags", platformSlashes($config["db"]["path"]), $config["db"]["config"]); // Tags
+
+    $searchables = ["copyright:{$tag}", "character:{$tag}", "artist:{$tag}", "meta:{$tag}", "tag:{$tag}"];
+    foreach ($searchables as $sa) {
+        $search = $db["tags"]->findOneBy(["full", "==", $sa]);
+        if (!empty($search)) {
+            $tag = $sa;
+            break;
+        }
+    }
+
+    if (empty($search)) {
+        $tag = "tag:{$tag}";
+    }
+
+    $type = "tag";
+    $prefixes = ["artist:", "a:", "character:", "char:", "c:", "meta:", "m:", "copyright:", "copy:", "cp:", "tag:", "t:"];
+
+    foreach ($prefixes as $prefix) {
+        if (startsWith($tag, $prefix)) {
+            $tag = substr($tag, strlen($prefix));
+            switch ($prefix) {
+                case "artist:":
+                case "a:":
+                    $type = "artist";
+                    break;
+                case "character:":
+                case "char:":
+                case "c:":
+                    $type = "character";
+                    break;
+                case "meta:":
+                case "m:":
+                    $type = "meta";
+                    break;
+                case "copyright:":
+                case "copy:":
+                case "cp:":
+                    $type = "copyright";
+                    break;
+                default:
+                    $type = "tag";
+            }
+            break;
+        }
+    }
+
+    return ["type" => $type, "tag" => $tag, "full" => $type . ":" . $tag];
+}
+
 function ps($path)
 {
     return str_replace("/", DIRECTORY_SEPARATOR, $path);
@@ -376,7 +430,7 @@ function altProcessTags(int $postId, $tags)
     }
 
     foreach ($tags as $_tag) {
-        $tag = parseTag($_tag);
+        $tag = parseTag2($_tag);
         $order = getOrder($tag["type"]);
 
         $exTag = $db["tags"]->findOneBy([["name", "==", $tag["tag"]], "AND", ["type", "==", $tag["type"]]]);
