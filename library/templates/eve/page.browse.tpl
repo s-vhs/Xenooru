@@ -26,11 +26,12 @@
                     {foreach from=$tags.copyrights item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                            <a href="browse.php?page=search&query={$item.full}"
+                                class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
                             {$item.count}
                         </li>
                     {/foreach}
@@ -42,11 +43,11 @@
                     {foreach from=$tags.characters item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-lime-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -59,11 +60,11 @@
                     {foreach from=$tags.artists item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-indigo-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -76,11 +77,11 @@
                     {foreach from=$tags.tags item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-red-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -93,11 +94,11 @@
                     {foreach from=$tags.metas item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-orange-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -114,11 +115,12 @@
                     {foreach from=$tags.copyrights item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}" class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                            <a href="browse.php?page=search&query={$item.full}"
+                                class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
                             {$item.count}
                         </li>
                     {/foreach}
@@ -130,11 +132,11 @@
                     {foreach from=$tags.characters item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-lime-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -147,11 +149,11 @@
                     {foreach from=$tags.artists item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-indigo-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -164,11 +166,11 @@
                     {foreach from=$tags.tags item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-red-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -181,11 +183,11 @@
                     {foreach from=$tags.metas item=item key=key name=name}
                         <li>
                             <a href="wiki.php?term={$item.full}" class="text-red-500 hover:text-red-300">?</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}{$item.full}"
                                 class="hover:underline">+</a>
-                            <a href="?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
+                            <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
-                            <a href="?page=search&query={$item.full}"
+                            <a href="browse.php?page=search&query={$item.full}"
                                 class="text-orange-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
@@ -303,34 +305,34 @@
     <div class="col-span-7">
         {if $page !== "post"}
             {if $page == "favourites"}
-                <h1 class="text-2xl mb-2">{$lang.favourites_of} <a href="users.php?id={$favouriter._id}"
+                <h1 class="text-2xl mb-2">{$lang.favourites_of} <a href="profile.php?id={$favouriter._id}"
                         class="text-red-500 hover:text-red-300">{$favouriter.username}</a></h1>
             {/if}
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {foreach from=$posts item=item key=key name=name}
                     <div class="mx-auto">
-                        <a href="?page=post&id={$item["_id"]}" title="{$item.tags} score:{$item.score} rating:{$item.rating}">
+                        <a href="browse.php?page=post&id={$item["_id"]}"
+                            title="{$item.tags} score:{$item.score} rating:{$item.rating}">
                             <img src="{if $item.deleted}assets/img/deleted.png{elseif $item.status == "awaiting"}assets/img/pending.png{else}{$config.db.thumbs.0}/{$item.file.database.thumb}{/if}"
                                 alt="If you're reading this, you have JavaScript disabled or try reloading the page"
-                                class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.file.orientation == "landscape"}w-[300px] h-auto{else}h-[200px] w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
-
+                                class="img2check mx-auto max-h-[200px] {if $item.deleted || $item.status == "awaiting" || $item.file.orientation == "landscape"}w-[300px] h-auto{else}h-[200px] w-auto{/if} {if $item.file.type.name == "video" && !$item.deleted && $item.status == "active"}border border-blue-500 border-4{elseif $item.deleted}border border-red-500 border-4{elseif $item.status == "awaiting"}border border-orange-500 border-4{/if}">
                         </a>
                     </div>
                 {/foreach}
                 <div class="col-span-full mx-auto">
                     {if $pagination > 1}
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination=1"
+                        <a href="browse.php?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination=1"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &lt;&lt;
                         </a>
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination - 1}"
+                        <a href="browse.php?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination - 1}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &lt;
                         </a>
                     {/if}
                     {foreach from=$pagis item=item key=key name=name}
                         {if $pagination != $item}
-                            <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$item}"
+                            <a href="browse.php?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$item}"
                                 class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                                 {$item}
                             </a>
@@ -341,11 +343,11 @@
                         {/if}
                     {/foreach}
                     {if $pagination < $totalpages}
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination + 1}"
+                        <a href="browse.php?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$pagination + 1}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &gt;
                         </a>
-                        <a href="?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$totalpages}"
+                        <a href="browse.php?page={$page}&{if isset($searchquery)}query={$searchquery}&{/if}{if isset($favouriter._id)}user={$favouriter._id}&{/if}pagination={$totalpages}"
                             class="text-sm bg-red-500 px-2 text-white hover:bg-red-300 border border-black">
                             &gt;&gt;
                         </a>
@@ -353,7 +355,32 @@
                 </div>
             </div>
         {else}
-            {if !$post.deleted}
+            {if $post.deleted}
+                <div class="border border-2 border-red-500 p-2">
+                    <p>
+                        <span class="text-red-500 font-bold">This post has been deleted.</span>
+                        Reason:
+                        {if !empty($post.deletedReason)}
+                            {$post.deletedReason}
+                        {else}
+                            Unknown.
+                        {/if}
+                    </p>
+                </div>
+            {else}
+                {if $post.status == "awaiting"}
+                    <div class="border border-2 border-red-500 p-2 mb-4">
+                        <p>
+                            <span class="text-red-500 font-bold">This post is awaiting approval.</span>
+                            Reason:
+                            {if !empty($post.statusReason)}
+                                {$post.statusReason}
+                            {else}
+                                Unknown.
+                            {/if}
+                        </p>
+                    </div>
+                {/if}
                 {if $post.file.type.name == "image"}
                     <img src="{$config.db.uploads.0}/{$post.file.database.file}" class="w-auto max-w-full">
                 {elseif $post.file.type.name == "video"}
@@ -460,18 +487,6 @@
                         adjustVideoHeight("{$post.file.dimensions}");
                     </script>
                 {/if}
-            {else}
-                <div class="border border-2 border-red-500 p-2">
-                    <p>
-                        <span class="text-red-500 font-bold">This post has been deleted.</span>
-                        Reason:
-                        {if !empty($post.deletedReason)}
-                            {$post.deletedReason}
-                        {else}
-                            Unknown.
-                        {/if}
-                    </p>
-                </div>
             {/if}
 
             <h1 class="text-xl mt-2">
@@ -536,7 +551,7 @@
                                         <div class="flex items-center h-5">
                                             <input id="explicit" type="radio" name="rating" value="explicit"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" required
-                                                {if $post.rating == "exlpicit"}checked{/if}>
+                                                {if $post.rating == "explicit"}checked{/if}>
                                         </div>
                                         <div class="ml-2 text-sm">
                                             <label for="explicit" class="font-medium text-gray-900">Explicit (NSFW)</label>
