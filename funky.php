@@ -458,7 +458,7 @@ function altProcessTags(int $postId, $tags)
         ];
 
         $relation = array();
-        $relation = $db["tagRelations"]->findOneBy([["post", "==", $postId], "AND", ["name", "==", $tag["name"]]]);
+        $relation = $db["tagRelations"]->findOneBy([["post", "==", $postId], "AND", ["name", "==", $tag["tag"]]]);
         if (empty($relation))
             $db["tagRelations"]->insert($data);
 

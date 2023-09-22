@@ -49,7 +49,7 @@ switch ($_GET["page"] ?? "browse") {
                 $post = $db["posts"]->findById($fav["post"]);
                 if ($post) array_push($posts, $post);
             }
-            $totalPages = $db["posts"]->count() / $config["perpage"]["posts"];
+            $totalPages = ceil(count($posts) / $config["perpage"]["posts"]);
             $pagis = array();
             for ($i = 0; $i < $totalPages; $i++) {
                 array_push($pagis, $i + 1);
@@ -124,19 +124,19 @@ switch ($_GET["page"] ?? "browse") {
                 $_search = array();
                 $c = 0;
                 foreach ($rating as $r) {
-                    $_search[$c] = array("rating", "=", $r);
+                    $_search[$c] = array("rating", "==", $r);
                     $c++;
                 }
                 $search->where([$_search[0], "OR", $_search[1]]);
             } else {
-                $search->where(["rating", "=", $rating]);
+                $search->where(["rating", "==", $rating]);
             }
         }
         $allPosts = $search
             ->search(["tags"], $toSearch)
             ->getQuery()
             ->fetch();
-        $totalPages = count($allPosts) / $config["perpage"]["posts"];
+        $totalPages = ceil(count($allPosts) / $config["perpage"]["posts"]);
         $smarty->assign("totalpages", $totalPages);
         $smarty->assign("pagination", clean($_GET["pagination"] ?? 1));
         $smarty->assign("posts", $posts);
@@ -156,7 +156,7 @@ switch ($_GET["page"] ?? "browse") {
             ->skip($skip)
             ->getQuery()
             ->fetch();
-        $totalPages = $db["posts"]->count() / $config["perpage"]["posts"];
+        $totalPages = ceil($db["posts"]->count() / $config["perpage"]["posts"]);
         $smarty->assign("totalpages", $totalPages);
         $smarty->assign("pagination", clean($_GET["pagination"] ?? 1));
         $smarty->assign("posts", $posts);

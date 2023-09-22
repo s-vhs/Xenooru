@@ -3,12 +3,16 @@
 // Wie lange braucht die Seite um zu laden?
 $starttime = microtime(true);
 
-$currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
 // Erst nehmen wir alles wichtige
+require "funky.php";
 require "config.php";
 $config["debug"] == true ? error_reporting(E_ALL) && ini_set('display_errors', 1) : error_reporting(0) && ini_set('display_errors', 0);
-require_once "funky.php";
+
+// Ich werde das ein andermal implementieren...
+// if (!file_exists(ps(__DIR__ . "/.installed"))) {
+//     header("Location: install.php");
+//     die("software not installed. if it is, check if file .installed exists in software root directory.");
+// }
 
 // Nun initialisieren wir die Datenbank. Später erstellen wir die einzelnen Elemente
 require_once "library/SleekDB/Store.php";
@@ -74,9 +78,12 @@ $pages = array(
 
 // Nun alles unwichtige andere
 visit();
+$requestUrl = $_SERVER['REQUEST_URI'];
 $url = trim(parse_url((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER["HTTP_HOST"]}{$_SERVER["REQUEST_URI"]}", PHP_URL_SCHEME) . '://' . parse_url((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER["HTTP_HOST"]}{$_SERVER["REQUEST_URI"]}", PHP_URL_HOST), "/");
 $url = $url . substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/') + 1);
 $smarty->assign("url", $url);
+$smarty->assign("requestUrl", $requestUrl);
+
 
 // Theme und/oder Sprache ändern
 if (isset($_POST["customize"])) {

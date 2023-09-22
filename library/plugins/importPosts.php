@@ -7,7 +7,7 @@ else
 
 if ($logged && $userlevel["perms"]["can_post"]) {
     if (isset($_GET["action"]) && !empty($_GET["action"]) && clean($_GET["action"]) == "importPost") {
-        if (strpos($currentUrl, "blank.php") == false) {
+        if (strpos($requestUrl, "blank.php") == false) {
             header("Location: blank.php?action=importPost&source={$_GET["source"]}&pid={$_GET["pid"]}");
             die("lol");
         }
@@ -121,9 +121,9 @@ if ($logged && $userlevel["perms"]["can_post"]) {
                                                 // Prepare post for inserting into DB
                                                 echo "Success! Preparing for insert in DataBase...<br>";
                                                 switch ($result["post"]["@attributes"]["rating"]) {
-                                                    case "q":
-                                                        $rating = "questionable";
-                                                        break;
+                                                        // case "q":
+                                                        //     $rating = "questionable";
+                                                        //     break;
                                                     case "e":
                                                         $rating = "explicit";
                                                         break;

@@ -31,7 +31,7 @@
                             <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
                             <a href="browse.php?page=search&query={$item.full}"
-                                class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                                class="text-fuchsia-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
                     {/foreach}
@@ -120,7 +120,7 @@
                             <a href="browse.php?page=search&query={if isset($searchquery)}{$searchquery}+{/if}-{$item.full}"
                                 class="hover:underline">-</a>
                             <a href="browse.php?page=search&query={$item.full}"
-                                class="text-fuchsia-500 hover:text-red-300">{$item.name}</a>
+                                class="text-fuchsia-500 hover:text-red-300">{str_replace("_", " ", $item.name)}</a>
                             {$item.count}
                         </li>
                     {/foreach}
