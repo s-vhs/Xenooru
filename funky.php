@@ -290,7 +290,7 @@ function parseTag2($tag)
     foreach ($searchables as $sa) {
         $search = $db["tags"]->findOneBy(["full", "==", $sa]);
         if (!empty($search)) {
-            $tag = $sa;
+            $tag = clean($sa);
             break;
         }
     }
@@ -604,4 +604,32 @@ function getFileType($filename)
         "extension" => $extension,
         "type" => $type
     );
+}
+
+function containsXSS($string)
+{
+
+    // Define XSS tags
+    $xss_tags = array('<script>', '</script>', '<embed>', '<iframe>', '<object>', '<applet>');
+
+    // Loop through XSS tags
+    foreach ($xss_tags as $tag) {
+        // Check if tag is found in string
+        if (stripos($string, $tag) !== false) {
+            return true;
+        }
+    }
+
+    // Check for onclick or onload events
+    if (preg_match('/(?:onclick|onload)[^>]\s=\s*(?:"[^"]"|\'[^\']\')/i', $string)) {
+        return true;
+    }
+
+    // Check for style/onmouseover tags
+    if (preg_match('/<[\w:]+[^>]style="([^"])("|\'|>)/i', $string)) {
+        return true;
+    }
+
+    // No XSS tags found
+    return false;
 }

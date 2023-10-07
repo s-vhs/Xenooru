@@ -39,7 +39,7 @@ foreach ($profilefavourites as $pf) {
 $favouritecount = count($profilefavourites);
 $profilefavourites = array_slice($auxArray, 0, 6);
 
-$commentcount = count($db["comments"]->findBy(["user", "==", $profile["_id"]]));
+$commentcount = count($db["comments"]->findBy(["user_id", "==", $profile["_id"]]));
 
 $smarty->assign("profile", $profile);
 $smarty->assign("profilelevel", $profilelevel);

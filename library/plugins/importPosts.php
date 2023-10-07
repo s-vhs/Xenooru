@@ -166,7 +166,7 @@ if ($logged && $userlevel["perms"]["can_post"]) {
                                                     $data["tags"] = trim($tags);
                                                     $data["file"]["hash"] = $fileHash;
                                                     $db["posts"]->updateById($post["_id"], $data);
-                                                    die(print_r($result["post"]["@attributes"]["tags"]));
+                                                    // die(print_r($result["post"]["@attributes"]["tags"]));
                                                 } else {
                                                     echo "Error! The server messed up.";
                                                     doLog("upload", false, "inserting data failed.", $user["_id"]);

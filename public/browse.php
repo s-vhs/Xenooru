@@ -14,6 +14,14 @@ switch ($_GET["page"] ?? "browse") {
         $post = $db["posts"]->findById($id);
         if (empty($post)) header("Location: browse.php") && die("post not found.");
         $poster = $db["users"]->findById($post["user"]);
+        $comments = $db["comments"]->findBy(["post_id", "==", $post["_id"]], ["up" => "DESC", "timestamp" => "ASC"]);
+        foreach ($comments as $key => $comment) {
+            // Get user data from users collection
+            $xuser = $db["users"]->findOneBy(["_id", "==", $comment["user_id"]]);
+            // Add user data to comment
+            $comments[$key]["user"] = $xuser;
+        }
+        $smarty->assign("comments", $comments);
         $smarty->assign("post", $post);
         $smarty->assign("poster", $poster);
         if ($logged && $userlevel["perms"]["can_manage_favourites"]) {
@@ -322,11 +330,62 @@ if ($page == "post" && $userlevel["perms"]["can_edit_post"] && isset($_POST["edi
     }
 }
 
-if ($page == "post" && $userlevel["perms"]["can_comment"] && isset($_POST["comment"])) {
+if ($page == "post" && $userlevel["perms"]["can_comment"] && isset($_POST["comment"]) && !empty($post["_id"]) && is_numeric($post["_id"])) {
     $error = false;
-    if (empty($_POST["commentPost"])) {
+
+    // Check if user is logged in
+    if (!$logged) {
         $error = true;
-        $smarty->assign("error", "Comment is empty!");
+        doLog("addComment", false, "not logged in.", null);
+        $smarty->assign("error", "Not logged in!");
+    }
+
+    // Sanitize input
+    $comment = bbcodeLink(clean($_POST["commentPost"]));
+
+    // Check for empty comment
+    if (empty($comment)) {
+        $error = true;
+        doLog("addComment", false, "empty comment", $user["_id"]);
+        $smarty->assign("error", "Comment cannot be empty!");
+    }
+
+    // Check XSS vulnerabilities
+    if (containsXSS($comment)) {
+        $error = true;
+        doLog("addComment", false, "XSS detected", $user["_id"]);
+        $smarty->assign("error", "Comment contains invalid characters!");
+    }
+
+    if (strlen($comment) < $config["minlength"]["comment"]) {
+        $error = true;
+        doLog("addComment", false, "minlength not succesful", $user["_id"]);
+        $smarty->assign("error", "Comment not at least {$config["minlength"]["comment"]} characters long!");
+    }
+
+    // Insert comment
+    $data = [
+        "post_id" => $post["_id"],
+        "user_id" => $user["_id"],
+        "comment" => $comment,
+        "up" => 0,
+        "down" => 0,
+        "timestamp" => now()
+    ];
+
+    if (!$error) {
+        $comment = $db["comments"]->insert($data);
+
+        if (!empty($comment)) {
+            $error = true;
+            doLog("addComment", false, "comment not in db", $user["_id"]);
+            $smarty->assign("error", "Comment not posted in DB!");
+        }
+        // Log success
+        doLog("addComment", true, $comment["_id"], $user["_id"]);
+
+        header("Refresh: 0");
+        die("added");
     }
 }
 
