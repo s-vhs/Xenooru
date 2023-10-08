@@ -21,8 +21,9 @@ if (isset($_GET["term"]) && !empty($_GET["term"])) {
             $smarty->assign("term", $term);
         }
     } else {
-        header("Location: wiki.php");
-        die("Tag does not exist.");
+        // Why does this even exist?????????
+        // header("Location: wiki.php");
+        // die("Tag does not exist.");
     }
 
     $smarty->assign("exists", $exists);

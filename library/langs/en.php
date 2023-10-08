@@ -165,6 +165,7 @@ $lang = array(
     "recent_favourites" => "Recent Favourites",
     "recent_uploads" => "Recent Uploads",
     "level" => "Level",
+    "all_comments" => "All Comments",
 
     "phrases" => array(
         "login" => "If you already have an account you can login here. Alternatively, accessing features that require an account will automatically log you in if you've enabled cookies.",

@@ -100,6 +100,10 @@
                     <li>
                         <a href="?page=random" class="mx-1 hover:text-red-200">{$lang.random}</a>
                     </li>
+                {elseif $pages.isComments}
+                    <li>
+                        <a href="comments.php" class="mx-1 hover:text-red-200">{$lang.all_comments}</a>
+                    </li>
                 {elseif $pages.isWiki}
                     <li>
                         <a href="wiki.php" class="mx-1 hover:text-red-200">{$lang.all_terms}</a>

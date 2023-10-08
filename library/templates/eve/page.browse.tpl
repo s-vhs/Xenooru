@@ -607,13 +607,18 @@
             <h3 class="text-xl pt-3">Comments</h3>
             {foreach from=$comments item=item key=key name=name}
                 <div class="my-1">
-                    <a class="text-red-500 font-bold hover:text-red-300" href="profile.php?id={$item.user._id}">{$item.user.username}</a>
-                    <span class="text-sm">
-                        ({$item.timestamp})
-                        (<span id="comment{$item._id}up">{$item.up}</span>/<span
-                            id="comment{$item._id}down">{$item.down}</span>)
-                        Vote <a class="text-red-500 hover:text-red-300" href="#">up</a>/<a
-                            class="text-red-500 hover:text-red-300" href="#">down</a>
+                    <a class="text-red-500 hover:text-red-300" href="profile.php?id={$item.user._id}">{$item.user.username}</a>
+                    <span class="text-gray-400 text-sm">>>#{$item._id}</span>
+                    <br>
+                    <span class="text-sm font-bold">
+                        Posted on
+                        {$item.timestamp}
+                        Score: 0
+                        <!--(<span id="comment{$item._id}up">{$item.up}</span>/<span
+                            id="comment{$item._id}down">{$item.down}</span>)-->
+                        (Vote <a class="text-red-500 hover:text-red-300" href="#">up</a>/<a
+                            class="text-red-500 hover:text-red-300" href="#">down</a>)
+                        (<a href="#" class="text-red-500 hover:text-red-300">Report</a>)
                     </span>
                     <div>
                         {$item.comment}
