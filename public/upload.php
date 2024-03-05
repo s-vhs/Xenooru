@@ -81,7 +81,7 @@ if (isset($_POST["upload"])) {
                                             ->toFile(platformSlashes($config["db"]["thumbs"][1] . "/" . $newFilename . $fileTypeWithDot), 'image/png');
                                     } catch (Exception $err) {
                                         // Handle errors
-                                        doLog("upload", false, "error at thumbnail creation: " . $erro->getMessage(), $user["_id"]);
+                                        doLog("upload", false, "error at thumbnail creation: " . $err->getMessage(), $user["_id"]);
                                         $smarty->assign("error", "Thumbnail creation: " . $err->getMessage());
                                         $error = true;
                                     }
