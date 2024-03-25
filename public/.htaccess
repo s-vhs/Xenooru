@@ -1,2 +1,0 @@
-ErrorDocument 403 /error.php?id=403
-ErrorDocument 404 /error.php?id=404
